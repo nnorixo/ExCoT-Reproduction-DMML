@@ -1,0 +1,562 @@
+[
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.01",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Count restaurants where review is less than 3",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review < 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.02",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Count restaurants where review is NOT >= 3",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE NOT review >= 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.03",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Count restaurants with review less than 3; Include NULL check",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review < 3 OR review IS NULL"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.04",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Total restaurants minus those with review >= 3",
+    "SQL": "SELECT (SELECT COUNT(*) FROM generalinfo) - (SELECT COUNT(*) FROM generalinfo WHERE review >= 3) AS count"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.05",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Use CASE statement to count those below threshold",
+    "SQL": "SELECT SUM(CASE WHEN review < 3 OR review IS NULL THEN 1 ELSE 0 END) FROM generalinfo"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.06",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Count restaurants with review <= 2.9 (less than 3)",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review <= 2.9"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.07",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Filter out restaurants with review >= 3",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review < 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.08",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Use COALESCE to treat NULL as 0, then count those below 3",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE COALESCE(review, 0) < 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.09",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Count all restaurants; Subtract those with review >= 3",
+    "SQL": "SELECT COUNT(*) - COUNT(CASE WHEN review >= 3 THEN 1 END) FROM generalinfo"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.10",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Simple COUNT with WHERE clause for review < 3",
+    "SQL": "SELECT COUNT(id_restaurant) FROM generalinfo WHERE review < 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.11",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Include restaurants with no reviews (NULL) as not meeting minimum",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review < 3 OR review IS NULL"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.12",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Use NOT EXISTS with subquery for >= 3",
+    "SQL": "SELECT COUNT(*) FROM generalinfo g1 WHERE NOT EXISTS (SELECT 1 FROM generalinfo g2 WHERE g2.id_restaurant = g1.id_restaurant AND g2.review >= 3)"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.13",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Use IIF function (SQL Server style)",
+    "SQL": "SELECT SUM(IIF(review < 3 OR review IS NULL, 1, 0)) FROM generalinfo"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.14",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Count where review is less than 3 (treat NULL as 0)",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE IFNULL(review, 0) < 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.15",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Use arithmetic comparison",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review < 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.16",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Count where review is NOT greater than or equal to 3",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE NOT review >= 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.17",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Use CASE and SUM for counting",
+    "SQL": "SELECT SUM(CASE WHEN review >= 3 THEN 0 ELSE 1 END) FROM generalinfo"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.18",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Count with condition review <= 2.999",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review <= 2.999"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.19",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Simple and direct - count below threshold",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review < 3"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "1.20",
+    "question": "How many restaurants have not obtained a minimum of 3 in their reviews?",
+    "evidence": "Include both NULL and values below 3",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE review < 3 OR review IS NULL"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.01",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Find top 4 restaurants by review score (highest reviews); Get their food types",
+    "SQL": "SELECT food_type FROM generalinfo ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.02",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Include restaurant ID for clarity, order by review descending, limit to 4",
+    "SQL": "SELECT id_restaurant, food_type FROM generalinfo ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.03",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Get distinct food types from top 4 restaurants (in case of duplicates)",
+    "SQL": "SELECT DISTINCT food_type FROM generalinfo ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.04",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "First identify top 4 restaurant IDs, then get their food types",
+    "SQL": "WITH top_restaurants AS (SELECT id_restaurant FROM generalinfo ORDER BY review DESC LIMIT 4) SELECT food_type FROM generalinfo WHERE id_restaurant IN (SELECT id_restaurant FROM top_restaurants)"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.05",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Include review scores to verify they are top-rated",
+    "SQL": "SELECT food_type, review FROM generalinfo ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.06",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Handle potential NULL reviews by excluding them from top list",
+    "SQL": "SELECT food_type FROM generalinfo WHERE review IS NOT NULL ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.07",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Get food types with restaurant city for additional context",
+    "SQL": "SELECT g.food_type, g.city FROM generalinfo g ORDER BY g.review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.08",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Use subquery to rank and then filter",
+    "SQL": "SELECT food_type FROM (SELECT food_type, ROW_NUMBER() OVER (ORDER BY review DESC) AS rank FROM generalinfo) WHERE rank <= 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.09",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Include street information from location table",
+    "SQL": "SELECT g.food_type, l.street_name FROM generalinfo g LEFT JOIN location l ON g.id_restaurant = l.id_restaurant ORDER BY g.review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.10",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Get food types with county and region information",
+    "SQL": "SELECT g.food_type, geo.county, geo.region FROM generalinfo g LEFT JOIN geographic geo ON g.city = geo.city ORDER BY g.review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.11",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Use DENSE_RANK to handle ties correctly",
+    "SQL": "SELECT food_type FROM (SELECT food_type, DENSE_RANK() OVER (ORDER BY review DESC) AS rank FROM generalinfo) WHERE rank <= 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.12",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Include label for each restaurant",
+    "SQL": "SELECT label, food_type FROM generalinfo ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.13",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Group by food type to see if top restaurants share cuisines",
+    "SQL": "SELECT food_type, COUNT(*) AS count_in_top FROM (SELECT food_type FROM generalinfo ORDER BY review DESC LIMIT 4) GROUP BY food_type"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.14",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Use JOIN with location for complete address",
+    "SQL": "SELECT g.food_type, l.street_num, l.street_name, l.city FROM generalinfo g JOIN location l ON g.id_restaurant = l.id_restaurant ORDER BY g.review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.15",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Handle NULL reviews by placing them at the end",
+    "SQL": "SELECT food_type FROM generalinfo ORDER BY review DESC NULLS LAST LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.16",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Use RANK to see if there are ties for 4th place",
+    "SQL": "SELECT food_type, review, RANK() OVER (ORDER BY review DESC) AS rank FROM generalinfo HAVING rank <= 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.17",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Simple query with food type only, no additional columns",
+    "SQL": "SELECT food_type FROM generalinfo WHERE review IS NOT NULL ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.18",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Include both food type and city for geographical context",
+    "SQL": "SELECT food_type, city FROM generalinfo ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.19",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Use a subquery with ORDER BY and LIMIT",
+    "SQL": "SELECT food_type FROM (SELECT food_type FROM generalinfo ORDER BY review DESC) WHERE ROWNUM <= 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "2.20",
+    "question": "What types of food are served at the 4 top-reviewed restaurants?",
+    "evidence": "Complete information about top 4 restaurants",
+    "SQL": "SELECT id_restaurant, label, food_type, city, review FROM generalinfo ORDER BY review DESC LIMIT 4"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.01",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Count restaurants where city is 'Richmond' and food_type is 'Mediterranean'",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.02",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use COUNT with two conditions in WHERE clause",
+    "SQL": "SELECT COUNT(id_restaurant) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.03",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Join with geographic table to verify city exists",
+    "SQL": "SELECT COUNT(g.id_restaurant) FROM generalinfo g INNER JOIN geographic geo ON g.city = geo.city WHERE g.city = 'Richmond' AND g.food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.04",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use CASE statement for counting",
+    "SQL": "SELECT SUM(CASE WHEN city = 'Richmond' AND food_type = 'Mediterranean' THEN 1 ELSE 0 END) FROM generalinfo"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.05",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Count with AND condition",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.06",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use subquery to find Richmond restaurants first",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE id_restaurant IN (SELECT id_restaurant FROM generalinfo WHERE city = 'Richmond') AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.07",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Include location table join for address verification",
+    "SQL": "SELECT COUNT(DISTINCT g.id_restaurant) FROM generalinfo g INNER JOIN location l ON g.id_restaurant = l.id_restaurant WHERE g.city = 'Richmond' AND g.food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.08",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Case-insensitive city and food type check",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE LOWER(city) = LOWER('Richmond') AND LOWER(food_type) = LOWER('Mediterranean')"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.09",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use COUNT with multiple conditions",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.10",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Check for NULL values and exclude them",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean' AND city IS NOT NULL AND food_type IS NOT NULL"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.11",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use EXISTS with subquery",
+    "SQL": "SELECT COUNT(*) FROM generalinfo g WHERE EXISTS (SELECT 1 FROM geographic geo WHERE geo.city = g.city AND geo.city = 'Richmond') AND g.food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.12",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Return only the count as requested",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.13",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use GROUP BY with HAVING for verification",
+    "SQL": "SELECT COUNT(*) FROM generalinfo GROUP BY city, food_type HAVING city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.14",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Simple count with two conditions",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.15",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use INNER JOIN with geographic for data integrity",
+    "SQL": "SELECT COUNT(g.id_restaurant) FROM generalinfo g INNER JOIN geographic geo ON g.city = geo.city WHERE g.city = 'Richmond' AND g.food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.16",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Count with trimmed strings to handle whitespace",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE TRIM(city) = 'Richmond' AND TRIM(food_type) = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.17",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use COUNT with WHERE clause",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.18",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Include review average for additional context",
+    "SQL": "SELECT COUNT(*) AS count, AVG(review) AS avg_review FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.19",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Use DISTINCT count to avoid duplicates",
+    "SQL": "SELECT COUNT(DISTINCT id_restaurant) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "3.20",
+    "question": "How many restaurants in the city of Richmond serve Mediterranean food?",
+    "evidence": "Simple and direct - exactly what was asked",
+    "SQL": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.01",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Query geographic table for cities where county is 'Sonoma County'",
+    "SQL": "SELECT city FROM geographic WHERE county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.02",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Select cities with county filter; order alphabetically",
+    "SQL": "SELECT city FROM geographic WHERE county = 'Sonoma County' ORDER BY city"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.03",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Include county in result for verification",
+    "SQL": "SELECT city, county FROM geographic WHERE county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.04",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Get distinct cities (though city is primary key, so no duplicates)",
+    "SQL": "SELECT DISTINCT city FROM geographic WHERE county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.05",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Case-insensitive county name check",
+    "SQL": "SELECT city FROM geographic WHERE LOWER(county) = LOWER('Sonoma County')"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.06",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Include region information if available",
+    "SQL": "SELECT city, region FROM geographic WHERE county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.07",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Use LIKE for partial matching if needed",
+    "SQL": "SELECT city FROM geographic WHERE county LIKE '%Sonoma%' AND county LIKE '%County%'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.08",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Simple query with county filter",
+    "SQL": "SELECT city FROM geographic WHERE county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.09",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Check for NULL county values and exclude them",
+    "SQL": "SELECT city FROM geographic WHERE county = 'Sonoma County' AND county IS NOT NULL"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.10",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Order by city name descending",
+    "SQL": "SELECT city FROM geographic WHERE county = 'Sonoma County' ORDER BY city DESC"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.11",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Use TRIM to handle whitespace",
+    "SQL": "SELECT city FROM geographic WHERE TRIM(county) = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.12",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Include count of cities",
+    "SQL": "SELECT city, (SELECT COUNT(*) FROM geographic WHERE county = 'Sonoma County') AS total_cities FROM geographic WHERE county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.13",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Use EXISTS to verify county exists",
+    "SQL": "SELECT city FROM geographic g WHERE EXISTS (SELECT 1 FROM geographic WHERE county = 'Sonoma County' AND city = g.city)"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.14",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Simple and direct query",
+    "SQL": "SELECT city FROM geographic WHERE county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.15",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Join with generalinfo to see which cities have restaurants",
+    "SQL": "SELECT DISTINCT g.city FROM geographic g INNER JOIN generalinfo gi ON g.city = gi.city WHERE g.county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.16",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Include both city and county in output",
+    "SQL": "SELECT city, county FROM geographic WHERE county = 'Sonoma County' ORDER BY city"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.17",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Use WITH clause for readability",
+    "SQL": "WITH sonoma_cities AS (SELECT city FROM geographic WHERE county = 'Sonoma County') SELECT city FROM sonoma_cities"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.18",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Check for exact match with county name",
+    "SQL": "SELECT city FROM geographic WHERE county = 'Sonoma County'"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.19",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Return cities with region information",
+    "SQL": "SELECT city, region FROM geographic WHERE county = 'Sonoma County' ORDER BY city"
+  },
+  {
+    "db_id": "restaurant",
+    "candidate_id": "4.20",
+    "question": "List all the cities in Sonoma County.",
+    "evidence": "Simple and direct - exactly what was asked",
+    "SQL": "SELECT city FROM geographic WHERE county = 'Sonoma County' ORDER BY city"
+  }
+]

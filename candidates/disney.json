@@ -1,0 +1,1402 @@
+[
+  {
+    "db_id": "disney",
+    "candidate_id": "1.01",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "The revenue table contains financial data for Walt Disney Company; Filter for Year 1998 and 1997; Subtract 1997 Total from 1998 Total",
+    "SQL": "SELECT (SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997) AS revenue_difference_1998_vs_1997"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.02",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Use CASE statement to get both values in one row; Calculate difference directly",
+    "SQL": "SELECT SUM(CASE WHEN Year = 1998 THEN Total ELSE 0 END) - SUM(CASE WHEN Year = 1997 THEN Total ELSE 0 END) AS revenue_difference FROM revenue WHERE Year IN (1997, 1998)"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.03",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Self-join approach: Join revenue table with itself for the two years",
+    "SQL": "SELECT r1998.Total - r1997.Total AS revenue_difference FROM revenue r1998 INNER JOIN revenue r1997 ON 1=1 WHERE r1998.Year = 1998 AND r1997.Year = 1997"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.04",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Use WITH clause to make the query more readable; Calculate difference between the two years",
+    "SQL": "WITH revenue_1997 AS (SELECT Total FROM revenue WHERE Year = 1997), revenue_1998 AS (SELECT Total FROM revenue WHERE Year = 1998) SELECT (SELECT Total FROM revenue_1998) - (SELECT Total FROM revenue_1997) AS revenue_difference"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.05",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Use LAG window function to compare with previous year",
+    "SQL": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.06",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Calculate percentage increase as well as absolute difference",
+    "SQL": "SELECT r1998.Total - r1997.Total AS absolute_difference, ((r1998.Total * 1.0 / r1997.Total) - 1) * 100 AS percentage_increase FROM revenue r1998, revenue r1997 WHERE r1998.Year = 1998 AND r1997.Year = 1997"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.07",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Use aggregation with FILTER clause (PostgreSQL style)",
+    "SQL": "SELECT (SUM(Total) FILTER (WHERE Year = 1998) - SUM(Total) FILTER (WHERE Year = 1997)) AS revenue_difference FROM revenue WHERE Year IN (1997, 1998)"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.08",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Use PIVOT-like approach with conditional aggregation",
+    "SQL": "SELECT MAX(CASE WHEN Year = 1998 THEN Total END) - MAX(CASE WHEN Year = 1997 THEN Total END) AS revenue_difference FROM revenue WHERE Year IN (1997, 1998)"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.09",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "First verify that both years exist in the data; Then calculate difference",
+    "SQL": "SELECT CASE WHEN (SELECT COUNT(*) FROM revenue WHERE Year = 1997) > 0 AND (SELECT COUNT(*) FROM revenue WHERE Year = 1998) > 0 THEN (SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997) ELSE NULL END AS revenue_difference"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.10",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Calculate difference and also show the individual values for context",
+    "SQL": "SELECT (SELECT Total FROM revenue WHERE Year = 1998) AS revenue_1998, (SELECT Total FROM revenue WHERE Year = 1997) AS revenue_1997, (SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997) AS revenue_difference"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.11",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Use a temporary table approach with UNION",
+    "SQL": "SELECT SUM(CASE WHEN year_group = 1998 THEN total ELSE -total END) AS revenue_difference FROM (SELECT Total, Year FROM revenue WHERE Year IN (1997, 1998)) AS yearly_data"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.12",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Include check for data quality: ensure Total is numeric",
+    "SQL": "SELECT CAST((SELECT Total FROM revenue WHERE Year = 1998) AS INTEGER) - CAST((SELECT Total FROM revenue WHERE Year = 1997) AS INTEGER) AS revenue_difference"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.13",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Calculate difference and round to nearest integer",
+    "SQL": "SELECT ROUND((SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997)) AS revenue_difference_rounded"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.14",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Use COALESCE to handle potential NULL values",
+    "SQL": "SELECT COALESCE((SELECT Total FROM revenue WHERE Year = 1998), 0) - COALESCE((SELECT Total FROM revenue WHERE Year = 1997), 0) AS revenue_difference"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.15",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Format the result with currency symbol and commas for readability",
+    "SQL": "SELECT '$' || printf('%,d', (SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997)) AS revenue_difference_formatted"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.16",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Check if 1998 revenue was actually higher; Show sign of difference",
+    "SQL": "SELECT (SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997) AS revenue_difference, CASE WHEN (SELECT Total FROM revenue WHERE Year = 1998) > (SELECT Total FROM revenue WHERE Year = 1997) THEN 'increase' WHEN (SELECT Total FROM revenue WHERE Year = 1998) < (SELECT Total FROM revenue WHERE Year = 1997) THEN 'decrease' ELSE 'no change' END AS trend"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.17",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Calculate using a correlated subquery approach",
+    "SQL": "SELECT Total - (SELECT Total FROM revenue WHERE Year = 1997) AS revenue_difference FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.18",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Use mathematical approach with SIGN function to show magnitude",
+    "SQL": "SELECT ABS((SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997)) AS absolute_difference, SIGN((SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997)) AS direction_sign FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.19",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Include both years and difference in a single row result",
+    "SQL": "SELECT MAX(CASE WHEN Year = 1997 THEN Total END) AS revenue_1997, MAX(CASE WHEN Year = 1998 THEN Total END) AS revenue_1998, MAX(CASE WHEN Year = 1998 THEN Total END) - MAX(CASE WHEN Year = 1997 THEN Total END) AS revenue_difference FROM revenue WHERE Year IN (1997, 1998)"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "1.20",
+    "question": "How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?",
+    "evidence": "Complete analysis with multiple metrics for comparison",
+    "SQL": "WITH yearly_data AS (SELECT Year, Total FROM revenue WHERE Year IN (1997, 1998)) SELECT MAX(CASE WHEN Year = 1998 THEN Total END) AS revenue_1998, MAX(CASE WHEN Year = 1997 THEN Total END) AS revenue_1997, MAX(CASE WHEN Year = 1998 THEN Total END) - MAX(CASE WHEN Year = 1997 THEN Total END) AS absolute_difference, ROUND(((MAX(CASE WHEN Year = 1998 THEN Total END) * 1.0 / MAX(CASE WHEN Year = 1997 THEN Total END)) - 1) * 100, 2) AS percentage_change FROM yearly_data"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.01",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Compare Studio Entertainment and Disney Media Networks revenue for 1998; Return the segment name with higher value",
+    "SQL": "SELECT CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.02",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Get both values first, then compare using subqueries",
+    "SQL": "WITH revenue_1998 AS (SELECT CAST(\"Studio Entertainment[NI 1]\" AS REAL) AS studio, CAST(\"Disney Media Networks\" AS REAL) AS media FROM revenue WHERE Year = 1998) SELECT CASE WHEN studio > media THEN 'Studio Entertainment' WHEN media > studio THEN 'Disney Media Networks' ELSE 'Equal' END AS bigger_segment FROM revenue_1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.03",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Show actual values alongside the comparison result",
+    "SQL": "SELECT \"Studio Entertainment[NI 1]\" AS studio_revenue, \"Disney Media Networks\" AS media_revenue, CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.04",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Calculate the difference and show which segment leads",
+    "SQL": "SELECT CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) - CAST(\"Disney Media Networks\" AS REAL) > 0 THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment, ABS(CAST(\"Studio Entertainment[NI 1]\" AS REAL) - CAST(\"Disney Media Networks\" AS REAL)) AS difference FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.05",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Use MAX function to determine which value is larger",
+    "SQL": "SELECT CASE WHEN MAX(CAST(\"Studio Entertainment[NI 1]\" AS REAL)) > MAX(CAST(\"Disney Media Networks\" AS REAL)) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.06",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Unpivot the data to compare segments row-wise",
+    "SQL": "WITH unpivoted AS (SELECT 'Studio Entertainment' AS segment, CAST(\"Studio Entertainment[NI 1]\" AS REAL) AS revenue FROM revenue WHERE Year = 1998 UNION ALL SELECT 'Disney Media Networks' AS segment, CAST(\"Disney Media Networks\" AS REAL) AS revenue FROM revenue WHERE Year = 1998) SELECT segment FROM unpivoted ORDER BY revenue DESC LIMIT 1"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.07",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Include percentage comparison",
+    "SQL": "SELECT CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment, ROUND(ABS(CAST(\"Studio Entertainment[NI 1]\" AS REAL) - CAST(\"Disney Media Networks\" AS REAL)) / NULLIF(CAST(\"Disney Media Networks\" AS REAL), 0) * 100, 2) AS percentage_difference FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.08",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Check if either value is NULL before comparing",
+    "SQL": "SELECT CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) IS NULL THEN 'Disney Media Networks' WHEN CAST(\"Disney Media Networks\" AS REAL) IS NULL THEN 'Studio Entertainment' WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.09",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Use IFF function (SQL Server style)",
+    "SQL": "SELECT IIF(CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL), 'Studio Entertainment', 'Disney Media Networks') AS bigger_segment FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.10",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Compare using a calculated field",
+    "SQL": "SELECT 'Studio Entertainment' AS segment, CAST(\"Studio Entertainment[NI 1]\" AS REAL) AS revenue FROM revenue WHERE Year = 1998 UNION SELECT 'Disney Media Networks', CAST(\"Disney Media Networks\" AS REAL) FROM revenue WHERE Year = 1998 ORDER BY revenue DESC LIMIT 1"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.11",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Include both revenue values and the winner in a formatted output",
+    "SQL": "SELECT 'In 1998, ' || CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END || ' earned more revenue.' AS result, \"Studio Entertainment[NI 1]\" AS studio_revenue, \"Disney Media Networks\" AS media_revenue FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.12",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Use GREATEST function to find the larger value, then determine which column it came from",
+    "SQL": "SELECT CASE WHEN GREATEST(CAST(\"Studio Entertainment[NI 1]\" AS REAL), CAST(\"Disney Media Networks\" AS REAL)) = CAST(\"Studio Entertainment[NI 1]\" AS REAL) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.13",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Calculate the ratio between segments",
+    "SQL": "SELECT CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment, CAST(\"Studio Entertainment[NI 1]\" AS REAL) / NULLIF(CAST(\"Disney Media Networks\" AS REAL), 0) AS studio_to_media_ratio FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.14",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Compare using a subquery that returns both values",
+    "SQL": "SELECT CASE WHEN (SELECT CAST(\"Studio Entertainment[NI 1]\" AS REAL) FROM revenue WHERE Year = 1998) > (SELECT CAST(\"Disney Media Networks\" AS REAL) FROM revenue WHERE Year = 1998) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.15",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Use a window function to rank the segments",
+    "SQL": "WITH segment_values AS (SELECT 'Studio Entertainment' AS segment, CAST(\"Studio Entertainment[NI 1]\" AS REAL) AS revenue FROM revenue WHERE Year = 1998 UNION ALL SELECT 'Disney Media Networks', CAST(\"Disney Media Networks\" AS REAL) FROM revenue WHERE Year = 1998), ranked AS (SELECT segment, revenue, RANK() OVER (ORDER BY revenue DESC) AS rnk FROM segment_values) SELECT segment AS bigger_segment FROM ranked WHERE rnk = 1"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.16",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Include a check if both segments have the same revenue",
+    "SQL": "SELECT CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL) THEN 'Studio Entertainment' WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) < CAST(\"Disney Media Networks\" AS REAL) THEN 'Disney Media Networks' ELSE 'Both segments earned the same revenue' END AS comparison_result FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.17",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Format the result as a complete sentence",
+    "SQL": "SELECT 'The ' || CASE WHEN CAST(\"Studio Entertainment[NI 1]\" AS REAL) > CAST(\"Disney Media Networks\" AS REAL) THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END || ' segment earned more revenue in 1998.' AS answer FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.18",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Compare using arithmetic sign of the difference",
+    "SQL": "SELECT CASE WHEN SIGN(CAST(\"Studio Entertainment[NI 1]\" AS REAL) - CAST(\"Disney Media Networks\" AS REAL)) = 1 THEN 'Studio Entertainment' WHEN SIGN(CAST(\"Studio Entertainment[NI 1]\" AS REAL) - CAST(\"Disney Media Networks\" AS REAL)) = -1 THEN 'Disney Media Networks' ELSE 'Equal' END AS bigger_segment FROM revenue WHERE Year = 1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.19",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Use a temporary table to store both values",
+    "SQL": "WITH temp AS (SELECT CAST(\"Studio Entertainment[NI 1]\" AS REAL) AS studio, CAST(\"Disney Media Networks\" AS REAL) AS media FROM revenue WHERE Year = 1998) SELECT CASE WHEN studio > media THEN 'Studio Entertainment' ELSE 'Disney Media Networks' END AS bigger_segment FROM temp"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "2.20",
+    "question": "In which segment did the Walt Disney Company earned a bigger revenue in 1998, Studio Entertainment or Disney Media Networks?",
+    "evidence": "Complete analysis with comparison, values, and percentage difference",
+    "SQL": "WITH revenue_1998 AS (SELECT CAST(\"Studio Entertainment[NI 1]\" AS REAL) AS studio, CAST(\"Disney Media Networks\" AS REAL) AS media FROM revenue WHERE Year = 1998) SELECT CASE WHEN studio > media THEN 'Studio Entertainment' WHEN media > studio THEN 'Disney Media Networks' ELSE 'Equal' END AS bigger_segment, studio AS studio_revenue, media AS media_revenue, ABS(studio - media) AS absolute_difference, ROUND(ABS(studio - media) / NULLIF(LEAST(studio, media), 0) * 100, 2) AS percentage_higher FROM revenue_1998"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.01",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "The director table links movie titles to directors; Join with characters table to find Pinocchio",
+    "SQL": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.movie_title = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.02",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Direct query on director table without join since movie_title is the key",
+    "SQL": "SELECT director FROM director WHERE name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.03",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Use subquery to find the movie first, then get director",
+    "SQL": "SELECT director FROM director WHERE name IN (SELECT movie_title FROM characters WHERE movie_title = 'Pinocchio')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.04",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Include movie information from characters table for context",
+    "SQL": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.05",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Use EXISTS to verify the movie exists before returning director",
+    "SQL": "SELECT director FROM director WHERE name = 'Pinocchio' AND EXISTS (SELECT 1 FROM characters WHERE movie_title = 'Pinocchio')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.06",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Return result with a descriptive label",
+    "SQL": "SELECT 'The director of Pinocchio is ' || director AS answer FROM director WHERE name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.07",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Check case sensitivity - ensure correct capitalization",
+    "SQL": "SELECT director FROM director WHERE LOWER(name) = LOWER('Pinocchio')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.08",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Use COALESCE to handle potential NULL values",
+    "SQL": "SELECT COALESCE(director, 'Director information not available') AS director FROM director WHERE name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.09",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Join with movies_total_gross to include additional movie information",
+    "SQL": "SELECT d.director, mtg.genre, mtg.release_date FROM director d LEFT JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.10",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Use a CTE to first identify the movie, then get director",
+    "SQL": "WITH pinocchio_movie AS (SELECT movie_title FROM characters WHERE movie_title = 'Pinocchio') SELECT d.director FROM director d INNER JOIN pinocchio_movie pm ON d.name = pm.movie_title"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.11",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Include voice-actors information for comprehensive movie details",
+    "SQL": "SELECT d.director, va.\"voice-actor\" AS voice_actor FROM director d LEFT JOIN \"voice-actors\" va ON d.name = va.movie WHERE d.name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.12",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Check if there are multiple directors (though unlikely)",
+    "SQL": "SELECT director FROM director WHERE name = 'Pinocchio' GROUP BY director"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.13",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Use a scalar subquery in SELECT clause",
+    "SQL": "SELECT (SELECT director FROM director WHERE name = 'Pinocchio') AS director_of_pinocchio"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.14",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Format result with movie title and director",
+    "SQL": "SELECT 'Movie: ' || name || ', Director: ' || director AS movie_director_info FROM director WHERE name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.15",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Use UNION to include a message if movie not found",
+    "SQL": "SELECT director FROM director WHERE name = 'Pinocchio' UNION SELECT 'Movie not found in database' WHERE NOT EXISTS (SELECT 1 FROM director WHERE name = 'Pinocchio')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.16",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Join all relevant tables for complete movie profile",
+    "SQL": "SELECT d.director, c.hero, c.villian, c.song, mtg.release_date, mtg.genre FROM director d LEFT JOIN characters c ON d.name = c.movie_title LEFT JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.17",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Use ROW_NUMBER to ensure single result",
+    "SQL": "SELECT director FROM (SELECT director, ROW_NUMBER() OVER (ORDER BY director) AS rn FROM director WHERE name = 'Pinocchio') WHERE rn = 1"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.18",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Include release year from movie title if encoded in the ID",
+    "SQL": "SELECT director, SUBSTR(name, -4) AS possible_year FROM director WHERE name LIKE '%Pinocchio%'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.19",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Use DISTINCT to avoid duplicates",
+    "SQL": "SELECT DISTINCT director FROM director WHERE name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "3.20",
+    "question": "Who is the director of the movie Pinocchio?",
+    "evidence": "Complete query with all related information and formatted output",
+    "SQL": "SELECT d.name AS movie_title, d.director, c.release_date, c.hero, c.villian, c.song, va.\"voice-actor\" AS main_voice_actor FROM director d LEFT JOIN characters c ON d.name = c.movie_title LEFT JOIN \"voice-actors\" va ON c.hero = va.character WHERE d.name = 'Pinocchio'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.01",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "First find all movies directed by Wolfgang Reitherman in director table; Then get villains from characters table for those movies",
+    "SQL": "SELECT c.movie_title, c.villian FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.02",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Use subquery to find movies first, then list villains",
+    "SQL": "SELECT movie_title, villian FROM characters WHERE movie_title IN (SELECT name FROM director WHERE director = 'Wolfgang Reitherman')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.03",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Include director name in result for verification",
+    "SQL": "SELECT c.movie_title, c.villian, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.04",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Use EXISTS for verification",
+    "SQL": "SELECT movie_title, villian FROM characters c WHERE EXISTS (SELECT 1 FROM director d WHERE d.name = c.movie_title AND d.director = 'Wolfgang Reitherman')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.05",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Handle potential NULL villains with COALESCE",
+    "SQL": "SELECT c.movie_title, COALESCE(c.villian, 'No villain') AS villian FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.06",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Include release date for context",
+    "SQL": "SELECT c.movie_title, c.villian, c.release_date FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.07",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Use CTE for better readability",
+    "SQL": "WITH reitherman_movies AS (SELECT name FROM director WHERE director = 'Wolfgang Reitherman') SELECT c.movie_title, c.villian FROM characters c INNER JOIN reitherman_movies rm ON c.movie_title = rm.name"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.08",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Include hero information for comparison",
+    "SQL": "SELECT c.movie_title, c.hero, c.villian FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.09",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Add movie count and format output",
+    "SQL": "SELECT 'Movie: ' || c.movie_title || ' - Villain: ' || COALESCE(c.villian, 'None') AS villain_list FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.10",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Check for case sensitivity in director name",
+    "SQL": "SELECT c.movie_title, c.villian FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE LOWER(d.director) = LOWER('Wolfgang Reitherman')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.11",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Include total gross information",
+    "SQL": "SELECT c.movie_title, c.villian, mtg.total_gross FROM characters c INNER JOIN director d ON c.movie_title = d.name LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' ORDER BY mtg.total_gross DESC"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.12",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Use DISTINCT to avoid duplicate entries",
+    "SQL": "SELECT DISTINCT c.movie_title, c.villian FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.13",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Include voice actor information for villains",
+    "SQL": "SELECT c.movie_title, c.villian, va.\"voice-actor\" AS villain_voice_actor FROM characters c INNER JOIN director d ON c.movie_title = d.name LEFT JOIN \"voice-actors\" va ON c.villian = va.character WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.14",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Format as JSON-like output",
+    "SQL": "SELECT '{ \"movie\": \"' || c.movie_title || '\", \"villain\": \"' || COALESCE(c.villian, 'null') || '\" }' AS json_output FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.15",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Group by movie with multiple villains if applicable",
+    "SQL": "SELECT c.movie_title, GROUP_CONCAT(c.villian) AS villains FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' GROUP BY c.movie_title"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.16",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Include song information for each movie",
+    "SQL": "SELECT c.movie_title, c.villian, c.song FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.17",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Check for partial name matches",
+    "SQL": "SELECT c.movie_title, c.villian FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director LIKE '%Wolfgang Reitherman%'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.18",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Include MPAA rating for additional context",
+    "SQL": "SELECT c.movie_title, c.villian, mtg.MPAA_rating FROM characters c INNER JOIN director d ON c.movie_title = d.name LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.19",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Use UNION to add a header row",
+    "SQL": "SELECT 'Movie' AS movie, 'Villain' AS villain UNION ALL SELECT c.movie_title, COALESCE(c.villian, 'No villain') FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "4.20",
+    "question": "Please list the villains of all the movies directed by Wolfgang Reitherman.",
+    "evidence": "Complete analysis with all available information",
+    "SQL": "SELECT c.movie_title, c.villian, c.hero, c.song, c.release_date, d.director, mtg.genre, mtg.MPAA_rating, mtg.total_gross, va.\"voice-actor\" AS villain_voice_actor FROM characters c INNER JOIN director d ON c.movie_title = d.name LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title LEFT JOIN \"voice-actors\" va ON c.villian = va.character WHERE d.director = 'Wolfgang Reitherman' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.01",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "First find all movies directed by Wolfgang Reitherman; Then count those with December release date (month = 12)",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND SUBSTR(c.release_date, 6, 2) = '12'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.02",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use subquery to find Reitherman movies first; Then count December releases",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters WHERE movie_title IN (SELECT name FROM director WHERE director = 'Wolfgang Reitherman') AND SUBSTR(release_date, 6, 2) = '12'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.03",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Extract month using LIKE pattern for December (MM = 12)",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND c.release_date LIKE '%-12-%'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.04",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use CAST to convert date parts to numbers for comparison",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND CAST(SUBSTR(c.release_date, 6, 2) AS INTEGER) = 12"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.05",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Include total count and December count with percentage",
+    "SQL": "SELECT COUNT(*) AS total_reitherman_movies, SUM(CASE WHEN SUBSTR(c.release_date, 6, 2) = '12' THEN 1 ELSE 0 END) AS december_movies, ROUND(100.0 * SUM(CASE WHEN SUBSTR(c.release_date, 6, 2) = '12' THEN 1 ELSE 0 END) / COUNT(*), 2) AS percentage_december FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.06",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use CTE to separate movie finding from counting",
+    "SQL": "WITH reitherman_movies AS (SELECT c.* FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman') SELECT COUNT(*) AS december_movies_count FROM reitherman_movies WHERE SUBSTR(release_date, 6, 2) = '12'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.07",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use STRFTIME if available (SQLite function for date formatting)",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND STRFTIME('%m', c.release_date) = '12'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.08",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Check if release_date is in valid format before extracting",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND c.release_date IS NOT NULL AND SUBSTR(c.release_date, 6, 2) = '12'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.09",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use CASE statement for counting",
+    "SQL": "SELECT SUM(CASE WHEN SUBSTR(c.release_date, 6, 2) = '12' THEN 1 ELSE 0 END) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.10",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Include list of December movies for verification",
+    "SQL": "SELECT COUNT(*) AS december_movies_count, GROUP_CONCAT(c.movie_title) AS december_movies_list FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND SUBSTR(c.release_date, 6, 2) = '12'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.11",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use string splitting approach",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND c.release_date LIKE '____-12-__'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.12",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Include year information for December releases",
+    "SQL": "SELECT SUBSTR(c.release_date, 1, 4) AS year, COUNT(*) AS december_movies_per_year FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND SUBSTR(c.release_date, 6, 2) = '12' GROUP BY year ORDER BY year"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.13",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Compare December releases vs other months",
+    "SQL": "SELECT SUBSTR(c.release_date, 6, 2) AS month, COUNT(*) AS movie_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' GROUP BY month ORDER BY month"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.14",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use INSTR function to find position of month",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND INSTR(c.release_date, '-12-') > 0"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.15",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Include movies with missing release dates in count",
+    "SQL": "SELECT COUNT(*) AS total_movies, SUM(CASE WHEN SUBSTR(c.release_date, 6, 2) = '12' THEN 1 ELSE 0 END) AS december_movies, SUM(CASE WHEN c.release_date IS NULL THEN 1 ELSE 0 END) AS missing_release_date FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.16",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use REGEXP if supported",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND c.release_date REGEXP '^[0-9]{4}-12-[0-9]{2}$'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.17",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Format output as complete sentence",
+    "SQL": "SELECT 'Wolfgang Reitherman directed ' || COUNT(*) || ' movies released in December.' AS result FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND SUBSTR(c.release_date, 6, 2) = '12'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.18",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Use window function to show running total",
+    "SQL": "SELECT c.movie_title, c.release_date, COUNT(*) OVER () AS total_december_movies FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND SUBSTR(c.release_date, 6, 2) = '12'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.19",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Check for different date formats",
+    "SQL": "SELECT COUNT(*) AS december_movies_count FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND (SUBSTR(c.release_date, 6, 2) = '12' OR SUBSTR(c.release_date, 1, 2) = '12' OR c.release_date LIKE '%December%')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "5.20",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them were released in December?",
+    "evidence": "Complete analysis with movie details and counts",
+    "SQL": "WITH reitherman_movies AS (SELECT c.*, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman'), december_movies AS (SELECT * FROM reitherman_movies WHERE SUBSTR(release_date, 6, 2) = '12') SELECT (SELECT COUNT(*) FROM reitherman_movies) AS total_movies_directed, (SELECT COUNT(*) FROM december_movies) AS december_movies_count, ROUND(100.0 * (SELECT COUNT(*) FROM december_movies) / (SELECT COUNT(*) FROM reitherman_movies), 2) AS percentage_december, (SELECT GROUP_CONCAT(movie_title) FROM december_movies) AS december_movies_list FROM reitherman_movies LIMIT 1"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.01",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "First find the movie that has the song 'Once Upon a Dream' in characters table; Then find the director of that movie",
+    "SQL": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.02",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Use subquery to find movie first, then get director",
+    "SQL": "SELECT director FROM director WHERE name = (SELECT movie_title FROM characters WHERE song = 'Once Upon a Dream')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.03",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Include movie title in result for verification",
+    "SQL": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.04",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Use EXISTS to verify song exists",
+    "SQL": "SELECT d.director FROM director d WHERE EXISTS (SELECT 1 FROM characters c WHERE c.movie_title = d.name AND c.song = 'Once Upon a Dream')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.05",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Handle potential case sensitivity in song title",
+    "SQL": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE LOWER(c.song) = LOWER('Once Upon a Dream')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.06",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Include song title in output for confirmation",
+    "SQL": "SELECT c.song, c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.07",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Use CTE for better readability",
+    "SQL": "WITH movie_with_song AS (SELECT movie_title FROM characters WHERE song = 'Once Upon a Dream') SELECT d.director FROM director d INNER JOIN movie_with_song mws ON d.name = mws.movie_title"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.08",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Format result as complete sentence",
+    "SQL": "SELECT 'The movie with song \"Once Upon a Dream\" was directed by ' || d.director AS answer FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.09",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Include release date for additional context",
+    "SQL": "SELECT d.director, c.release_date FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.10",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Check for partial song title matches",
+    "SQL": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song LIKE '%Once Upon a Dream%'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.11",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Include hero and villain information",
+    "SQL": "SELECT d.director, c.hero, c.villian FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.12",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Use COALESCE to handle NULL director",
+    "SQL": "SELECT COALESCE(d.director, 'Director information not available') AS director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.13",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Join with movies_total_gross for financial context",
+    "SQL": "SELECT d.director, mtg.total_gross, mtg.genre FROM director d INNER JOIN characters c ON d.name = c.movie_title LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.14",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Use UNION to add message if song not found",
+    "SQL": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream' UNION SELECT 'Song not found in database' WHERE NOT EXISTS (SELECT 1 FROM characters WHERE song = 'Once Upon a Dream')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.15",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Include voice actor information for the hero",
+    "SQL": "SELECT d.director, c.hero, va.\"voice-actor\" AS hero_voice_actor FROM director d INNER JOIN characters c ON d.name = c.movie_title LEFT JOIN \"voice-actors\" va ON c.hero = va.character WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.16",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Use ROW_NUMBER to handle multiple matches",
+    "SQL": "SELECT director FROM (SELECT d.director, ROW_NUMBER() OVER (ORDER BY d.director) AS rn FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream') WHERE rn = 1"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.17",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Check for exact match with trimmed strings",
+    "SQL": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE TRIM(c.song) = TRIM('Once Upon a Dream')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.18",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Include MPAA rating for additional context",
+    "SQL": "SELECT d.director, mtg.MPAA_rating FROM director d INNER JOIN characters c ON d.name = c.movie_title LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.19",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Use DISTINCT to avoid duplicates",
+    "SQL": "SELECT DISTINCT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "6.20",
+    "question": "The song \"Once Upon a Dream\" is associated with the movie directed by whom?",
+    "evidence": "Complete analysis with all related information",
+    "SQL": "SELECT c.movie_title, c.release_date, c.hero, c.villian, c.song, d.director, mtg.genre, mtg.MPAA_rating, mtg.total_gross, va_hero.\"voice-actor\" AS hero_voice_actor, va_villain.\"voice-actor\" AS villain_voice_actor FROM characters c INNER JOIN director d ON c.movie_title = d.name LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title LEFT JOIN \"voice-actors\" va_hero ON c.hero = va_hero.character LEFT JOIN \"voice-actors\" va_villain ON c.villian = va_villain.character WHERE c.song = 'Once Upon a Dream'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.01",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "First find the villain of Alice in Wonderland from characters table; Then find the voice actor for that character",
+    "SQL": "SELECT va.\"voice-actor\" AS villain_voice_actor FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.02",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Use subquery to find villain first, then get voice actor",
+    "SQL": "SELECT \"voice-actor\" FROM \"voice-actors\" WHERE character = (SELECT villian FROM characters WHERE movie_title = 'Alice in Wonderland')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.03",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Include villain name in result for verification",
+    "SQL": "SELECT c.villian AS villain_character, va.\"voice-actor\" AS villain_voice_actor FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.04",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Use EXISTS to verify movie and villain exist",
+    "SQL": "SELECT va.\"voice-actor\" FROM \"voice-actors\" va WHERE EXISTS (SELECT 1 FROM characters c WHERE c.villian = va.character AND c.movie_title = 'Alice in Wonderland')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.05",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Handle potential case sensitivity in movie title",
+    "SQL": "SELECT va.\"voice-actor\" FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE LOWER(c.movie_title) = LOWER('Alice in Wonderland')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.06",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Include movie title in output for confirmation",
+    "SQL": "SELECT c.movie_title, c.villian, va.\"voice-actor\" FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.07",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Use CTE for better readability",
+    "SQL": "WITH alice_villain AS (SELECT villian FROM characters WHERE movie_title = 'Alice in Wonderland') SELECT va.\"voice-actor\" FROM \"voice-actors\" va INNER JOIN alice_villain av ON va.character = av.villian"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.08",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Format result as complete sentence",
+    "SQL": "SELECT 'The voice actor for the villain ' || c.villian || ' in Alice in Wonderland is ' || va.\"voice-actor\" AS answer FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.09",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Include hero voice actor for comparison",
+    "SQL": "SELECT c.villian, va_villain.\"voice-actor\" AS villain_voice, c.hero, va_hero.\"voice-actor\" AS hero_voice FROM characters c LEFT JOIN \"voice-actors\" va_villain ON c.villian = va_villain.character LEFT JOIN \"voice-actors\" va_hero ON c.hero = va_hero.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.10",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Check for multiple villains and their voice actors",
+    "SQL": "SELECT c.villian, va.\"voice-actor\" FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.11",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Use COALESCE to handle missing voice actor",
+    "SQL": "SELECT COALESCE(va.\"voice-actor\", 'Voice actor information not available') AS villain_voice_actor FROM characters c LEFT JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.12",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Join with director table for additional context",
+    "SQL": "SELECT c.movie_title, c.villian, va.\"voice-actor\", d.director FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.13",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Include release date and genre",
+    "SQL": "SELECT c.villian, va.\"voice-actor\", c.release_date, mtg.genre FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.14",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Use UNION to add message if villain not found",
+    "SQL": "SELECT va.\"voice-actor\" FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland' UNION SELECT 'Villain or voice actor not found' WHERE NOT EXISTS (SELECT 1 FROM characters WHERE movie_title = 'Alice in Wonderland' AND villian IS NOT NULL)"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.15",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Use INNER JOIN with three tables for complete picture",
+    "SQL": "SELECT c.movie_title, c.villian, va.\"voice-actor\", d.director, mtg.total_gross FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character LEFT JOIN director d ON c.movie_title = d.name LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.16",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Check for trimmed strings to handle whitespace",
+    "SQL": "SELECT va.\"voice-actor\" FROM characters c INNER JOIN \"voice-actors\" va ON TRIM(c.villian) = TRIM(va.character) WHERE TRIM(c.movie_title) = TRIM('Alice in Wonderland')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.17",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Include the song from the movie for additional context",
+    "SQL": "SELECT c.villian, va.\"voice-actor\", c.song FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.18",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Use DISTINCT to avoid duplicates if multiple entries",
+    "SQL": "SELECT DISTINCT va.\"voice-actor\" FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.19",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Format output with multiple columns for clarity",
+    "SQL": "SELECT 'Movie: ' || c.movie_title AS movie, 'Villain: ' || c.villian AS villain, 'Voice Actor: ' || va.\"voice-actor\" AS voice_actor FROM characters c INNER JOIN \"voice-actors\" va ON c.villian = va.character WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "7.20",
+    "question": "Who is the voice actor for the villain of the movie \"Alice in Wonderland\"?",
+    "evidence": "Complete analysis with all available information",
+    "SQL": "SELECT c.movie_title, c.release_date, c.hero, c.villian, c.song, va_villain.\"voice-actor\" AS villain_voice_actor, va_hero.\"voice-actor\" AS hero_voice_actor, d.director, mtg.genre, mtg.MPAA_rating, mtg.total_gross FROM characters c LEFT JOIN \"voice-actors\" va_villain ON c.villian = va_villain.character LEFT JOIN \"voice-actors\" va_hero ON c.hero = va_hero.character LEFT JOIN director d ON c.movie_title = d.name LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE c.movie_title = 'Alice in Wonderland'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.01",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "First find all movies where Alan Tudyk is a voice actor from voice-actors table; Then join with characters table to get release dates",
+    "SQL": "SELECT c.movie_title, c.release_date FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.02",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Use subquery to find movies first, then get release dates",
+    "SQL": "SELECT movie_title, release_date FROM characters WHERE movie_title IN (SELECT movie FROM \"voice-actors\" WHERE \"voice-actor\" = 'Alan Tudyk') ORDER BY release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.03",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Include the character name for additional context",
+    "SQL": "SELECT c.movie_title, c.release_date, va.character FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.04",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Use EXISTS for verification",
+    "SQL": "SELECT movie_title, release_date FROM characters c WHERE EXISTS (SELECT 1 FROM \"voice-actors\" va WHERE va.movie = c.movie_title AND va.\"voice-actor\" = 'Alan Tudyk') ORDER BY release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.05",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Include total gross information for each movie",
+    "SQL": "SELECT c.movie_title, c.release_date, mtg.total_gross FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.06",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Use CTE for better readability",
+    "SQL": "WITH tudyk_movies AS (SELECT DISTINCT movie FROM \"voice-actors\" WHERE \"voice-actor\" = 'Alan Tudyk') SELECT c.movie_title, c.release_date FROM characters c INNER JOIN tudyk_movies tm ON c.movie_title = tm.movie ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.07",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Handle potential case sensitivity in voice actor name",
+    "SQL": "SELECT c.movie_title, c.release_date FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE LOWER(va.\"voice-actor\") = LOWER('Alan Tudyk') ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.08",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Include director information for each movie",
+    "SQL": "SELECT c.movie_title, c.release_date, d.director FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie LEFT JOIN director d ON c.movie_title = d.name WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.09",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Format dates and show count of movies",
+    "SQL": "SELECT c.movie_title, c.release_date, COUNT(*) OVER () AS total_movies FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.10",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Group by year to see distribution",
+    "SQL": "SELECT SUBSTR(c.release_date, 1, 4) AS year, COUNT(*) AS movies_per_year, GROUP_CONCAT(c.movie_title) AS movie_titles FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' GROUP BY year ORDER BY year"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.11",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Include song information for each movie",
+    "SQL": "SELECT c.movie_title, c.release_date, c.song FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.12",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Check for multiple voice roles in same movie",
+    "SQL": "SELECT c.movie_title, c.release_date, COUNT(va.character) AS roles_count, GROUP_CONCAT(va.character) AS characters FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' GROUP BY c.movie_title, c.release_date ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.13",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Include MPAA rating for each movie",
+    "SQL": "SELECT c.movie_title, c.release_date, mtg.MPAA_rating FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.14",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Use DISTINCT to avoid duplicates",
+    "SQL": "SELECT DISTINCT c.movie_title, c.release_date FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.15",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Format output as complete sentences",
+    "SQL": "SELECT c.movie_title || ' was released on ' || c.release_date AS movie_release_info FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.16",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Include genre information",
+    "SQL": "SELECT c.movie_title, c.release_date, mtg.genre FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.17",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Use UNION to add a header row",
+    "SQL": "SELECT 'Movie Title' AS movie_title, 'Release Date' AS release_date UNION ALL SELECT c.movie_title, c.release_date FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.18",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Include hero and villain information",
+    "SQL": "SELECT c.movie_title, c.release_date, c.hero, c.villian FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.19",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Find the earliest and latest release dates",
+    "SQL": "SELECT MIN(c.release_date) AS earliest_movie_date, MAX(c.release_date) AS latest_movie_date, COUNT(*) AS total_movies FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "8.20",
+    "question": "Please list the release dates of all the movies in which Alan Tudyk is a voice actor.",
+    "evidence": "Complete analysis with all available information",
+    "SQL": "SELECT c.movie_title, c.release_date, c.hero, c.villian, c.song, va.character, d.director, mtg.genre, mtg.MPAA_rating, mtg.total_gross, mtg.inflation_adjusted_gross FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie LEFT JOIN director d ON c.movie_title = d.name LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE va.\"voice-actor\" = 'Alan Tudyk' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.01",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "First find all movies with Alan Tudyk; Then count those with release_date > 2012; Use SUBSTR to extract year",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND SUBSTR(c.release_date, 1, 4) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.02",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use subquery to find Tudyk movies first; Then count those after 2012",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012 FROM characters WHERE movie_title IN (SELECT movie FROM \"voice-actors\" WHERE \"voice-actor\" = 'Alan Tudyk') AND SUBSTR(release_date, 1, 4) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.03",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Include total count and after-2012 count with percentage",
+    "SQL": "SELECT COUNT(*) AS total_tudyk_movies, SUM(CASE WHEN SUBSTR(c.release_date, 1, 4) > '2012' THEN 1 ELSE 0 END) AS movies_after_2012, ROUND(100.0 * SUM(CASE WHEN SUBSTR(c.release_date, 1, 4) > '2012' THEN 1 ELSE 0 END) / COUNT(*), 2) AS percentage_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.04",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use CAST to convert year to integer for comparison",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND CAST(SUBSTR(c.release_date, 1, 4) AS INTEGER) > 2012"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.05",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use CTE to separate movie finding from counting",
+    "SQL": "WITH tudyk_movies AS (SELECT c.* FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk') SELECT COUNT(*) AS movies_after_2012 FROM tudyk_movies WHERE SUBSTR(release_date, 1, 4) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.06",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use LIKE pattern for years after 2012",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND (c.release_date LIKE '2013%' OR c.release_date LIKE '2014%' OR c.release_date LIKE '2015%' OR c.release_date LIKE '2016%' OR c.release_date LIKE '2017%' OR c.release_date LIKE '2018%' OR c.release_date LIKE '2019%' OR c.release_date LIKE '202%')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.07",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use STRFTIME if available (SQLite function)",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND STRFTIME('%Y', c.release_date) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.08",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Include list of movies after 2012 for verification",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012, GROUP_CONCAT(c.movie_title) AS movie_list FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND SUBSTR(c.release_date, 1, 4) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.09",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use CASE statement for counting",
+    "SQL": "SELECT SUM(CASE WHEN SUBSTR(c.release_date, 1, 4) > '2012' THEN 1 ELSE 0 END) AS movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.10",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Check for NULL release dates",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND c.release_date IS NOT NULL AND SUBSTR(c.release_date, 1, 4) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.11",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Show distribution by year",
+    "SQL": "SELECT SUBSTR(c.release_date, 1, 4) AS year, COUNT(*) AS movies_per_year FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND SUBSTR(c.release_date, 1, 4) > '2012' GROUP BY year ORDER BY year"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.12",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use window function to show running total",
+    "SQL": "SELECT c.movie_title, c.release_date, COUNT(*) OVER () AS total_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND SUBSTR(c.release_date, 1, 4) > '2012' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.13",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Compare with movies before/including 2012",
+    "SQL": "SELECT SUM(CASE WHEN SUBSTR(c.release_date, 1, 4) > '2012' THEN 1 ELSE 0 END) AS after_2012, SUM(CASE WHEN SUBSTR(c.release_date, 1, 4) <= '2012' THEN 1 ELSE 0 END) AS before_or_in_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.14",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Format output as complete sentence",
+    "SQL": "SELECT 'Alan Tudyk voiced characters in ' || COUNT(*) || ' movies released after 2012.' AS result FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND SUBSTR(c.release_date, 1, 4) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.15",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use INSTR to find year position",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND CAST(SUBSTR(c.release_date, 1, INSTR(c.release_date, '-') - 1) AS INTEGER) > 2012"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.16",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Include character information for movies after 2012",
+    "SQL": "SELECT c.movie_title, c.release_date, va.character FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND SUBSTR(c.release_date, 1, 4) > '2012' ORDER BY c.release_date"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.17",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use REGEXP if supported",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND c.release_date REGEXP '^(201[3-9]|202[0-9])'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.18",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Include total gross for movies after 2012",
+    "SQL": "SELECT COUNT(*) AS movies_after_2012, SUM(CAST(mtg.total_gross AS INTEGER)) AS total_gross_sum FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie LEFT JOIN movies_total_gross mtg ON c.movie_title = mtg.movie_title WHERE va.\"voice-actor\" = 'Alan Tudyk' AND SUBSTR(c.release_date, 1, 4) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.19",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Use DISTINCT to avoid counting duplicates",
+    "SQL": "SELECT COUNT(DISTINCT c.movie_title) AS distinct_movies_after_2012 FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk' AND SUBSTR(c.release_date, 1, 4) > '2012'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "9.20",
+    "question": "Among the movies in which Alan Tudyk is a voice actor, how many of them were released after 2012?",
+    "evidence": "Complete analysis with all relevant metrics",
+    "SQL": "WITH tudyk_movies AS (SELECT c.*, va.character FROM characters c INNER JOIN \"voice-actors\" va ON c.movie_title = va.movie WHERE va.\"voice-actor\" = 'Alan Tudyk'), movies_after_2012 AS (SELECT * FROM tudyk_movies WHERE SUBSTR(release_date, 1, 4) > '2012') SELECT (SELECT COUNT(*) FROM tudyk_movies) AS total_tudyk_movies, (SELECT COUNT(*) FROM movies_after_2012) AS movies_after_2012, ROUND(100.0 * (SELECT COUNT(*) FROM movies_after_2012) / (SELECT COUNT(*) FROM tudyk_movies), 2) AS percentage_after_2012, (SELECT GROUP_CONCAT(movie_title) FROM movies_after_2012) AS movie_list, MIN(release_date) AS earliest_after_2012, MAX(release_date) AS latest_after_2012 FROM movies_after_2012"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.01",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Find movies directed by Wolfgang Reitherman; Join with movies_total_gross to get genre; Count those with genre 'Comedy'",
+    "SQL": "SELECT COUNT(*) AS comedy_count FROM director d INNER JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.02",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use subquery to find Reitherman movies first; Then count Comedies",
+    "SQL": "SELECT COUNT(*) AS comedy_count FROM movies_total_gross WHERE movie_title IN (SELECT name FROM director WHERE director = 'Wolfgang Reitherman') AND genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.03",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Simple join with COUNT and WHERE clause",
+    "SQL": "SELECT COUNT(*) AS comedy_count FROM director d JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.04",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use EXISTS for verification",
+    "SQL": "SELECT COUNT(*) AS comedy_count FROM movies_total_gross mtg WHERE EXISTS (SELECT 1 FROM director d WHERE d.name = mtg.movie_title AND d.director = 'Wolfgang Reitherman') AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.05",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Return only the number as requested",
+    "SQL": "SELECT COUNT(*) FROM movies_total_gross mtg INNER JOIN director d ON mtg.movie_title = d.name WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.06",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use CTE for clarity, but return only count",
+    "SQL": "WITH reitherman_movies AS (SELECT name FROM director WHERE director = 'Wolfgang Reitherman') SELECT COUNT(*) FROM movies_total_gross WHERE movie_title IN (SELECT name FROM reitherman_movies) AND genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.07",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Case-insensitive genre check",
+    "SQL": "SELECT COUNT(*) FROM director d INNER JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND LOWER(mtg.genre) = 'comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.08",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Include NULL check for genre",
+    "SQL": "SELECT COUNT(*) FROM director d INNER JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy' AND mtg.genre IS NOT NULL"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.09",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use DISTINCT to avoid duplicates",
+    "SQL": "SELECT COUNT(DISTINCT mtg.movie_title) FROM director d INNER JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.10",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Simple INNER JOIN with exact match",
+    "SQL": "SELECT COUNT(*) FROM movies_total_gross mtg, director d WHERE mtg.movie_title = d.name AND d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.11",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use LEFT JOIN but still count only Comedies",
+    "SQL": "SELECT COUNT(*) FROM director d LEFT JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.12",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Return count with descriptive column name",
+    "SQL": "SELECT COUNT(*) AS number_of_comedies FROM director d JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.13",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use NATURAL JOIN if applicable",
+    "SQL": "SELECT COUNT(*) FROM director d NATURAL JOIN movies_total_gross mtg WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.14",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Check for exact string match with trimming",
+    "SQL": "SELECT COUNT(*) FROM director d INNER JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND TRIM(mtg.genre) = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.15",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use subquery in WHERE clause",
+    "SQL": "SELECT COUNT(*) FROM movies_total_gross WHERE genre = 'Comedy' AND movie_title IN (SELECT name FROM director WHERE director = 'Wolfgang Reitherman')"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.16",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Simple two-table join with condition",
+    "SQL": "SELECT COUNT(*) FROM director d, movies_total_gross mtg WHERE d.name = mtg.movie_title AND d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.17",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use WITH clause for readability",
+    "SQL": "WITH reitherman_films AS (SELECT name FROM director WHERE director = 'Wolfgang Reitherman') SELECT COUNT(*) FROM movies_total_gross WHERE movie_title IN (SELECT name FROM reitherman_films) AND genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.18",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Return just the integer result",
+    "SQL": "SELECT COUNT(*) FROM director d JOIN movies_total_gross mtg ON d.name = mtg.movie_title AND d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.19",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Use IN with subquery",
+    "SQL": "SELECT COUNT(*) FROM movies_total_gross WHERE movie_title IN (SELECT name FROM director WHERE director = 'Wolfgang Reitherman') AND genre = 'Comedy'"
+  },
+  {
+    "db_id": "disney",
+    "candidate_id": "10.20",
+    "question": "Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?",
+    "evidence": "Simple and direct - exactly what was asked",
+    "SQL": "SELECT COUNT(*) FROM director d, movies_total_gross mtg WHERE d.name = mtg.movie_title AND d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+  }
+]

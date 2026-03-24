@@ -1,0 +1,842 @@
+[
+  {
+    "db_id": "beers",
+    "candidate_id": "1.01",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Find the minimum IBU from beers table; join with breweries to get the state; select distinct state.",
+    "SQL": "SELECT DISTINCT b.state FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE br.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.02",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Identify beer(s) with the lowest IBU; get corresponding brewery IDs; retrieve distinct states.",
+    "SQL": "SELECT DISTINCT breweries.state FROM breweries JOIN beers ON breweries.id = beers.brewery_id WHERE beers.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.03",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Compute minimum IBU; join beers with breweries on brewery_id; extract distinct state values.",
+    "SQL": "SELECT DISTINCT brw.state FROM breweries brw INNER JOIN beers b ON brw.id = b.brewery_id WHERE b.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.04",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Filter beers with IBU equal to the global minimum; map to breweries; select unique states.",
+    "SQL": "SELECT DISTINCT b.state FROM breweries b, beers br WHERE b.id = br.brewery_id AND br.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.05",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Determine least bitter beers; join with breweries; retrieve distinct state names.",
+    "SQL": "SELECT DISTINCT breweries.state FROM breweries, beers WHERE breweries.id = beers.brewery_id AND beers.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.06",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Select beers with lowest IBU using subquery; join breweries on brewery_id; output distinct states.",
+    "SQL": "SELECT DISTINCT br.state FROM breweries br JOIN beers b ON br.id = b.brewery_id WHERE b.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.07",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Compute MIN(ibu); join beers with breweries; select distinct state values.",
+    "SQL": "SELECT DISTINCT breweries.state FROM breweries INNER JOIN beers ON breweries.id = beers.brewery_id WHERE beers.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.08",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Find the beer with minimum IBU; get corresponding brewery_id; return distinct state names.",
+    "SQL": "SELECT DISTINCT b.state FROM breweries b JOIN beers br ON b.id = br.brewery_id AND br.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.09",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Use WHERE clause to filter beers with minimum bitterness; select state from breweries; distinct values only.",
+    "SQL": "SELECT DISTINCT brw.state FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE b.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.10",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Determine minimum IBU in beers; join breweries table to map brewery_id to state; select distinct state.",
+    "SQL": "SELECT DISTINCT b.state FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE br.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.11",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Filter beers to those with least IBU; join breweries table; retrieve unique state names.",
+    "SQL": "SELECT DISTINCT breweries.state FROM breweries JOIN beers ON breweries.id = beers.brewery_id WHERE beers.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.12",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Compute minimum IBU across all beers; join beers with breweries; select distinct states.",
+    "SQL": "SELECT DISTINCT br.state FROM breweries br JOIN beers b ON br.id = b.brewery_id WHERE b.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.13",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Get beer(s) with lowest IBU; link to breweries; select distinct state.",
+    "SQL": "SELECT DISTINCT b.state FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE br.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.14",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Find minimum bitterness in beers; join with breweries to retrieve state; distinct selection.",
+    "SQL": "SELECT DISTINCT brw.state FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE b.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.15",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Filter beers with IBU equal to minimal value; join breweries on brewery_id; select unique states.",
+    "SQL": "SELECT DISTINCT breweries.state FROM breweries, beers WHERE breweries.id = beers.brewery_id AND beers.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.16",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Use join between breweries and beers; filter by lowest IBU; return distinct states.",
+    "SQL": "SELECT DISTINCT b.state FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE br.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.17",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Compute minimum IBU; join breweries table to map to states; distinct output.",
+    "SQL": "SELECT DISTINCT brw.state FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE b.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.18",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Join beers with breweries; filter beers having least IBU; select distinct state names.",
+    "SQL": "SELECT DISTINCT b.state FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE br.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.19",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Identify beer(s) with minimum IBU; get brewery_id; select unique states.",
+    "SQL": "SELECT DISTINCT breweries.state FROM breweries JOIN beers ON breweries.id = beers.brewery_id WHERE beers.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "1.20",
+    "question": "Which distinct state makes beer that has the least amount of bitterness?",
+    "evidence": "Filter beers table by minimum IBU; join with breweries; output distinct state values.",
+    "SQL": "SELECT DISTINCT b.state FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE br.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.01",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Filter breweries in state = 'New York'; join with beers; find maximum IBU; select brewery name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.02",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Join breweries and beers; filter breweries in New York; select those beers with highest IBU; project name and city.",
+    "SQL": "SELECT DISTINCT breweries.name, breweries.city FROM breweries JOIN beers ON breweries.id = beers.brewery_id WHERE breweries.state = 'New York' AND beers.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.03",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Find beers with MAX(ibu); filter breweries located in New York; select brewery name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b INNER JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.04",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Filter breweries by state 'New York'; join beers; identify beers with highest IBU; return name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b, beers br WHERE b.id = br.brewery_id AND b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.05",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Identify maximum IBU from beers; join breweries in New York; select brewery name and city.",
+    "SQL": "SELECT DISTINCT brw.name, brw.city FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE brw.state = 'New York' AND b.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.06",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Join beers with breweries filtered by state NY; get rows where IBU is maximum; output name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.07",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Select breweries in New York that produce beers with the highest bitterness; project name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b INNER JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.08",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Find beers with maximum IBU; map to breweries in New York; select distinct name and city.",
+    "SQL": "SELECT DISTINCT brw.name, brw.city FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE brw.state = 'New York' AND b.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.09",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Join breweries and beers tables; filter NY breweries; retrieve beers with highest IBU; select name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.10",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Filter breweries by state NY; join with beers table; identify maximum IBU; output name and city.",
+    "SQL": "SELECT DISTINCT brw.name, brw.city FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE brw.state = 'New York' AND b.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.11",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Select NY breweries; join beers table; filter beers with MAX(ibu); select name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.12",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Join breweries with beers; restrict breweries to NY; find beer(s) with maximum IBU; project name and city.",
+    "SQL": "SELECT DISTINCT brw.name, brw.city FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE brw.state = 'New York' AND b.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.13",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Compute MAX IBU from beers; join breweries in New York; select distinct name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.14",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Filter breweries by New York; join beers table; get beers with highest IBU; select name and city.",
+    "SQL": "SELECT DISTINCT brw.name, brw.city FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE brw.state = 'New York' AND b.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.15",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Join beers with breweries in NY; find maximum IBU; select brewery name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.16",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Select breweries in NY producing beer with highest bitterness; output name and city.",
+    "SQL": "SELECT DISTINCT brw.name, brw.city FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE brw.state = 'New York' AND b.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.17",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Filter breweries in state NY; join beers; select rows with max IBU; project name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.18",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Join breweries with beers filtered by state NY; get maximum IBU; select name and city.",
+    "SQL": "SELECT DISTINCT brw.name, brw.city FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE brw.state = 'New York' AND b.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.19",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Filter beers table for maximum IBU; join breweries in New York; output distinct name and city.",
+    "SQL": "SELECT DISTINCT b.name, b.city FROM breweries b JOIN beers br ON b.id = br.brewery_id WHERE b.state = 'New York' AND br.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "2.20",
+    "question": "Where in New York can you locate the brewery that makes the bitterest beer? List both the brewery's name and the name of the city.",
+    "evidence": "Compute maximum IBU; join breweries in NY; select distinct brewery name and city.",
+    "SQL": "SELECT DISTINCT brw.name, brw.city FROM breweries brw JOIN beers b ON brw.id = b.brewery_id WHERE brw.state = 'New York' AND b.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.01",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Filter beers produced by breweries with name = 'Boston Beer Company'; normalize ABV to 12-ounce bottle by scaling if ounces != 12; compute AVG.",
+    "SQL": "SELECT AVG(abv * 12.0 / ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.02",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Join beers and breweries; select only Boston Beer Company; adjust ABV to 12 oz by multiplying by 12/ounces; take AVG.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.03",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Normalize ABV for 12-ounce bottles; filter beers from Boston Beer Company; compute average ABV.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b INNER JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.04",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Select beers where brewery is Boston Beer Company; scale ABV to 12 ounces; compute average.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.05",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Filter Boston Beer Company beers; scale ABV to 12oz bottle using ABV * 12 / ounces; compute AVG.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.06",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Normalize ABV for 12-ounce equivalent; filter beers from Boston Beer Company; compute average.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.07",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Join beers with breweries; filter by Boston Beer Company; scale ABV to 12 oz; compute AVG.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b INNER JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.08",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Filter Boston Beer Company beers; normalize ABV to 12-ounce bottles by ABV*12/ounces; calculate average.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.09",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Scale ABV values to 12 oz equivalent; select only beers produced by Boston Beer Company; compute AVG.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.10",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Select Boston Beer Company beers; adjust ABV to 12-ounce equivalent; compute average ABV.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.11",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Join breweries and beers; filter Boston Beer Company; normalize ABV for 12 ounces; calculate AVG.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b INNER JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.12",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Filter beers by Boston Beer Company; scale ABV to 12 oz using formula abv * 12 / ounces; take average.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.13",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Compute average ABV for beers from Boston Beer Company, normalized to 12-ounce bottles.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.14",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Normalize ABV values to 12 oz; filter beers from Boston Beer Company; compute average.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.15",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Scale each beer's ABV to a 12-ounce standard; average over all beers from Boston Beer Company.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.16",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Join beers and breweries; filter by Boston Beer Company; normalize ABV to 12 oz; calculate AVG.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.17",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Filter beers by brewery name; adjust ABV proportionally to 12 ounces; compute average.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.18",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Normalize ABV per 12 oz; filter beers from Boston Beer Company; compute AVG.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.19",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Compute ABV adjusted to 12-ounce bottles for all beers of Boston Beer Company; take average.",
+    "SQL": "SELECT AVG(b.abv * 12.0 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "3.20",
+    "question": "What is the average alcohol content per 12-ounce beer bottle produced by Boston Beer Company?",
+    "evidence": "Filter beers from Boston Beer Company; scale ABV to 12-ounce bottles; compute mean ABV.",
+    "SQL": "SELECT AVG(b.abv * 12 / b.ounces) AS avg_abv_12oz FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Boston Beer Company';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.01",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Filter beers by brewery name = 'Stevens Point Brewery'; count total beers; count beers with style = 'American Adjunct Lager'; compute percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style = 'American Adjunct Lager' THEN 1 END) AS REAL) * 100 / COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.02",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Select beers from Stevens Point Brewery; compute total count and count where style = 'American Adjunct Lager'; calculate percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style = 'American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.03",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Compute number of American Adjunct Lager beers; divide by total number of beers from Stevens Point Brewery; multiply by 100.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.04",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Filter Stevens Point Brewery beers; count total and American Adjunct Lager style; compute ratio as percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.05",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Join beers with breweries; filter for Stevens Point Brewery; calculate percentage of American Adjunct Lager beers.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.06",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Filter beers from Stevens Point Brewery; count American Adjunct Lager occurrences; divide by total beer count; multiply by 100.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.07",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Count all beers from Stevens Point Brewery; count those with style American Adjunct Lager; compute percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.08",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Filter Stevens Point Brewery beers; compute total number; compute number with style American Adjunct Lager; divide and multiply by 100.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.09",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Compute total number of Stevens Point Brewery beers; compute count of American Adjunct Lager; calculate ratio as percent.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.10",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Join beers and breweries; select only Stevens Point Brewery; compute count of American Adjunct Lager / total *100.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.11",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Filter beers by Stevens Point Brewery; count total and American Adjunct Lager; calculate percent allocation.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL) *100 / COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.12",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Count all beers for Stevens Point Brewery; count beers with style 'American Adjunct Lager'; divide by total and multiply by 100.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.13",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Select Stevens Point Brewery beers; compute total number; count style = American Adjunct Lager; calculate percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.14",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Filter beers by brewery; count all beers and American Adjunct Lager beers; compute ratio as percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.15",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Join beers and breweries; filter Stevens Point Brewery; count American Adjunct Lager; divide by total; multiply by 100.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.16",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Filter Stevens Point Brewery; count total beers; count American Adjunct Lager beers; compute percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.17",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Count all beers from Stevens Point Brewery; count American Adjunct Lager beers; calculate percentage allocation.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.18",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Select beers of Stevens Point Brewery; compute total and style-specific counts; divide to get percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.19",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Filter beers by Stevens Point Brewery; count total beers; count beers with style American Adjunct Lager; compute percentage.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "4.20",
+    "question": "Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?",
+    "evidence": "Calculate percentage of Stevens Point Brewery beers that are American Adjunct Lager by counting style and dividing by total.",
+    "SQL": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.01",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Find beers with maximum IBU and minimum IBU; join breweries to get city and state; compute difference max_ibu - min_ibu; select beer names.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.02",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Identify beers with MAX and MIN IBU; join with breweries to get city and state; compute difference; return beer names.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max INNER JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min INNER JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.03",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Find the beer with highest IBU and the one with lowest IBU; join with breweries to get city and state; compute difference max-min; include beer names.",
+    "SQL": "SELECT b_high.name AS max_ibu_beer, br_high.city AS max_city, br_high.state AS max_state, b_low.name AS min_ibu_beer, br_low.city AS min_city, br_low.state AS min_state, b_high.ibu - b_low.ibu AS ibu_difference FROM beers b_high JOIN breweries br_high ON b_high.brewery_id = br_high.id, beers b_low JOIN breweries br_low ON b_low.brewery_id = br_low.id WHERE b_high.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_low.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.04",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Compute MAX and MIN IBU; join breweries for location info; select beer names; calculate difference in bitterness.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.05",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Identify beers with maximum and minimum IBU; get brewery city and state; calculate IBU difference; include beer names.",
+    "SQL": "SELECT b1.name AS max_ibu_beer, br1.city AS max_city, br1.state AS max_state, b2.name AS min_ibu_beer, br2.city AS min_city, br2.state AS min_state, b1.ibu - b2.ibu AS ibu_difference FROM beers b1 JOIN breweries br1 ON b1.brewery_id = br1.id, beers b2 JOIN breweries br2 ON b2.brewery_id = br2.id WHERE b1.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b2.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.06",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Join breweries and beers; find beers with max IBU and min IBU; select city, state, beer names; compute difference.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max INNER JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min INNER JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.07",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Filter beers with MAX and MIN IBU; join breweries for city/state; compute difference; include beer names.",
+    "SQL": "SELECT b_high.name AS max_ibu_beer, br_high.city AS max_city, br_high.state AS max_state, b_low.name AS min_ibu_beer, br_low.city AS min_city, br_low.state AS min_state, b_high.ibu - b_low.ibu AS ibu_difference FROM beers b_high JOIN breweries br_high ON b_high.brewery_id = br_high.id, beers b_low JOIN breweries br_low ON b_low.brewery_id = br_low.id WHERE b_high.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_low.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.08",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Compute max and min IBU beers; join breweries to get city/state; return beer names; calculate IBU difference.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.09",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Select beers with extreme bitterness; join breweries for city/state; compute difference; list beer names.",
+    "SQL": "SELECT b1.name AS max_ibu_beer, br1.city AS max_city, br1.state AS max_state, b2.name AS min_ibu_beer, br2.city AS min_city, br2.state AS min_state, b1.ibu - b2.ibu AS ibu_difference FROM beers b1 JOIN breweries br1 ON b1.brewery_id = br1.id, beers b2 JOIN breweries br2 ON b2.brewery_id = br2.id WHERE b1.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b2.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.10",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Filter beers with max/min IBU; join breweries; compute difference; list beer names and brewery locations.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.11",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Identify beers with highest and lowest IBU; join breweries to obtain city/state; calculate IBU difference; output beer names.",
+    "SQL": "SELECT b_high.name AS max_ibu_beer, br_high.city AS max_city, br_high.state AS max_state, b_low.name AS min_ibu_beer, br_low.city AS min_city, br_low.state AS min_state, b_high.ibu - b_low.ibu AS ibu_difference FROM beers b_high JOIN breweries br_high ON b_high.brewery_id = br_high.id, beers b_low JOIN breweries br_low ON b_low.brewery_id = br_low.id WHERE b_high.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_low.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.12",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Compute beers with extreme IBU values; join breweries for city/state info; calculate difference; include beer names.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.13",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Select beers with max/min IBU; join breweries for city and state; compute bitterness difference; include beer names.",
+    "SQL": "SELECT b1.name AS max_ibu_beer, br1.city AS max_city, br1.state AS max_state, b2.name AS min_ibu_beer, br2.city AS min_city, br2.state AS min_state, b1.ibu - b2.ibu AS ibu_difference FROM beers b1 JOIN breweries br1 ON b1.brewery_id = br1.id, beers b2 JOIN breweries br2 ON b2.brewery_id = br2.id WHERE b1.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b2.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.14",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Join beers with breweries; identify most and least bitter beers; compute IBU difference; select beer names and locations.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.15",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Compute MAX and MIN IBU beers; join breweries; calculate IBU difference; output beer names with city and state.",
+    "SQL": "SELECT b1.name AS max_ibu_beer, br1.city AS max_city, br1.state AS max_state, b2.name AS min_ibu_beer, br2.city AS min_city, br2.state AS min_state, b1.ibu - b2.ibu AS ibu_difference FROM beers b1 JOIN breweries br1 ON b1.brewery_id = br1.id, beers b2 JOIN breweries br2 ON b2.brewery_id = br2.id WHERE b1.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b2.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.16",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Identify beers with extreme IBU values; join breweries to get city and state; compute IBU difference; include beer names.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.17",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Filter beers with max and min IBU; join with breweries; select city/state and beer names; calculate bitterness difference.",
+    "SQL": "SELECT b_high.name AS max_ibu_beer, br_high.city AS max_city, br_high.state AS max_state, b_low.name AS min_ibu_beer, br_low.city AS min_city, br_low.state AS min_state, b_high.ibu - b_low.ibu AS ibu_difference FROM beers b_high JOIN breweries br_high ON b_high.brewery_id = br_high.id, beers b_low JOIN breweries br_low ON b_low.brewery_id = br_low.id WHERE b_high.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_low.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.18",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Compute beers with highest and lowest IBU; join breweries to obtain city/state; compute IBU difference; output beer names.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.19",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Select beers with max and min IBU; join with breweries for city/state; calculate difference; list beer names.",
+    "SQL": "SELECT b1.name AS max_ibu_beer, br1.city AS max_city, br1.state AS max_state, b2.name AS min_ibu_beer, br2.city AS min_city, br2.state AS min_state, b1.ibu - b2.ibu AS ibu_difference FROM beers b1 JOIN breweries br1 ON b1.brewery_id = br1.id, beers b2 JOIN breweries br2 ON b2.brewery_id = br2.id WHERE b1.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b2.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "5.20",
+    "question": "Which city and state produces the most and least bitter beer, and what is the difference in bitterness between the two? List also the names of the beer.",
+    "evidence": "Identify beers with highest and lowest bitterness; join breweries to get city/state; compute IBU difference; return beer names.",
+    "SQL": "SELECT b_max.name AS max_ibu_beer, br_max.city AS max_city, br_max.state AS max_state, b_min.name AS min_ibu_beer, br_min.city AS min_city, br_min.state AS min_state, b_max.ibu - b_min.ibu AS ibu_difference FROM beers b_max JOIN breweries br_max ON b_max.brewery_id = br_max.id, beers b_min JOIN breweries br_min ON b_min.brewery_id = br_min.id WHERE b_max.ibu = (SELECT MAX(ibu) FROM beers WHERE ibu IS NOT NULL) AND b_min.ibu = (SELECT MIN(ibu) FROM beers WHERE ibu IS NOT NULL);"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.01",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Filter beers with style = 'American Blonde Ale'; join breweries; count distinct breweries nationwide; count distinct breweries in Wisconsin; compute percentage = (WI / US) * 100.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state = 'WI' THEN br.id END) AS REAL) * 100 / COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE b.style = 'American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.02",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Select breweries producing American Blonde Ale; count total distinct breweries; count those in Wisconsin; compute percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.03",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Filter beers by style 'American Blonde Ale'; join breweries; count total US breweries; count Wisconsin breweries; calculate percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.04",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Count distinct breweries in US producing style = 'American Blonde Ale'; count distinct breweries in WI producing same style; divide WI/US *100.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.05",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Select beers of style 'American Blonde Ale'; join breweries; compute total US breweries and WI breweries; calculate WI percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.06",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Join beers and breweries; filter for style 'American Blonde Ale'; count distinct breweries overall and in WI; compute percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL) *100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.07",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Compute number of breweries producing 'American Blonde Ale'; separate count for WI; divide WI by total *100 for percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.08",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Count total breweries producing style 'American Blonde Ale'; count breweries in WI; compute WI percent of total.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.09",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Filter American Blonde Ale beers; join breweries; count distinct breweries in US and in WI; compute WI/US *100.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.10",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Select breweries producing 'American Blonde Ale'; compute total distinct breweries and WI distinct breweries; calculate percentage of WI breweries.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.11",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Join beers and breweries; filter style 'American Blonde Ale'; count distinct breweries overall and WI; divide WI by total and multiply 100.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.12",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Count distinct breweries in US with beers of style 'American Blonde Ale'; count WI breweries; compute WI percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.13",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Filter beers style 'American Blonde Ale'; join breweries; count US breweries and WI breweries; divide to get percent WI.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL) *100 / COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.14",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Select breweries producing style 'American Blonde Ale'; compute distinct counts for WI and total US; compute WI percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.15",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Join beers and breweries; filter 'American Blonde Ale'; count distinct breweries in WI and total US; calculate percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.16",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Filter for style 'American Blonde Ale'; count distinct US breweries and WI breweries; calculate WI percent.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.17",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Select breweries producing 'American Blonde Ale'; count WI breweries; count total US breweries; compute WI/US*100.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.18",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Compute total breweries producing American Blonde Ale; count WI breweries; divide WI by total and multiply 100.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.19",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Join beers and breweries; filter for American Blonde Ale; count total US breweries and WI breweries; compute WI percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  },
+  {
+    "db_id": "beers",
+    "candidate_id": "6.20",
+    "question": "When compared to the total number of breweries in the US producing American Blonde Ale, how many in the state of Wisconsin produces American Blonde Ale? Indicate your answer in percentage (%).",
+    "evidence": "Filter beers by style 'American Blonde Ale'; join breweries; count distinct breweries in WI and total US; divide and multiply by 100 to get percentage.",
+    "SQL": "SELECT CAST(COUNT(DISTINCT CASE WHEN br.state='WI' THEN br.id END) AS REAL)*100/COUNT(DISTINCT br.id) AS percent_wi FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE b.style='American Blonde Ale';"
+  }
+]

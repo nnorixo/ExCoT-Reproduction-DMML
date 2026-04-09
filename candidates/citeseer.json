@@ -142,422 +142,422 @@
   {
     "db_id": "citeseer",
     "candidate_id": "2.01",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "First identify papers with class_label 'AI' from paper table; Then count distinct word_cited_id from content table for those papers; This gives total unique words cited in AI papers",
-    "SQL": "SELECT COUNT(DISTINCT c.word_cited_id) AS total_words_cited FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.02",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Include all words from AI papers, counting multiple occurrences; Use COUNT(*) instead of DISTINCT to get total citations count",
-    "SQL": "SELECT COUNT(*) AS total_word_occurrences FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.03",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Consider words that are cited in AI papers, but only count each word once per paper; This counts unique word-paper combinations",
-    "SQL": "SELECT COUNT(*) AS unique_word_paper_combinations FROM (SELECT DISTINCT c.word_cited_id, c.paper_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI') AS unique_combinations"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.04",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Compare with total words cited in all papers to understand proportion; Use subquery to get both totals",
-    "SQL": "SELECT COUNT(DISTINCT c.word_cited_id) AS ai_words, (SELECT COUNT(DISTINCT word_cited_id) FROM content) AS total_words, ROUND(100.0 * COUNT(DISTINCT c.word_cited_id) / (SELECT COUNT(DISTINCT word_cited_id) FROM content), 2) AS percentage FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.05",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Focus only on words that appear in citation relationships; Join with cites table to ensure words are from papers that are part of citation network",
-    "SQL": "SELECT COUNT(DISTINCT c.word_cited_id) AS words_in_cited_ai_papers FROM content c JOIN paper p ON c.paper_id = p.paper_id JOIN cites ON c.paper_id = cites.cited_paper_id OR c.paper_id = cites.citing_paper_id WHERE p.class_label = 'AI'"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.06",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Include word frequency information; Show top 10 words in AI papers with their counts",
-    "SQL": "SELECT c.word_cited_id, COUNT(*) AS frequency, COUNT(DISTINCT c.paper_id) AS papers FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id ORDER BY frequency DESC LIMIT 10"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.07",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Calculate average words per AI paper; This gives insight into vocabulary richness",
-    "SQL": "SELECT AVG(words_per_paper) AS avg_words_per_ai_paper FROM (SELECT c.paper_id, COUNT(DISTINCT c.word_cited_id) AS words_per_paper FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.paper_id) AS paper_words"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.08",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Find words that are unique to AI papers (don't appear in other classes); Use LEFT JOIN with non-AI papers",
-    "SQL": "WITH ai_words AS (SELECT DISTINCT word_cited_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'), non_ai_words AS (SELECT DISTINCT word_cited_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label != 'AI') SELECT COUNT(*) AS unique_ai_words FROM ai_words WHERE word_cited_id NOT IN (SELECT word_cited_id FROM non_ai_words)"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.09",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Consider temporal distribution if paper_id contains chronological information; Analyze word usage over time",
-    "SQL": "SELECT SUBSTR(p.paper_id, 1, 4) AS year_prefix, COUNT(DISTINCT c.word_cited_id) AS unique_words FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY SUBSTR(p.paper_id, 1, 4) ORDER BY year_prefix"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.10",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Focus on words that are cited most frequently in AI papers; Show word popularity ranking",
-    "SQL": "SELECT c.word_cited_id, COUNT(*) AS citation_frequency, RANK() OVER (ORDER BY COUNT(*) DESC) AS popularity_rank FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id ORDER BY citation_frequency DESC LIMIT 20"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.11",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Include statistical measures: mean, median, mode of word frequencies in AI papers",
-    "SQL": "WITH word_frequencies AS (SELECT c.word_cited_id, COUNT(*) AS freq FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id) SELECT AVG(freq) AS mean_frequency, MIN(freq) AS min_frequency, MAX(freq) AS max_frequency, COUNT(*) AS total_unique_words, SUM(freq) AS total_occurrences FROM word_frequencies"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.12",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Compare AI papers with non-AI papers; Show vocabulary overlap analysis",
-    "SQL": "WITH ai_words AS (SELECT DISTINCT word_cited_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'), non_ai_words AS (SELECT DISTINCT word_cited_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label != 'AI') SELECT (SELECT COUNT(*) FROM ai_words) AS ai_vocabulary_size, (SELECT COUNT(*) FROM non_ai_words) AS non_ai_vocabulary_size, (SELECT COUNT(*) FROM ai_words WHERE word_cited_id IN (SELECT word_cited_id FROM non_ai_words)) AS common_words"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.13",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Include only words that appear in at least X different AI papers; Filter for significance",
-    "SQL": "SELECT COUNT(*) AS significant_words FROM (SELECT c.word_cited_id, COUNT(DISTINCT c.paper_id) AS paper_count FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id HAVING COUNT(DISTINCT c.paper_id) >= 3) AS significant_words"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.14",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Analyze word length distribution in AI papers; Check if AI uses longer/shorter words",
-    "SQL": "SELECT CASE WHEN LENGTH(c.word_cited_id) <= 3 THEN 'short (1-3)' WHEN LENGTH(c.word_cited_id) <= 6 THEN 'medium (4-6)' WHEN LENGTH(c.word_cited_id) <= 10 THEN 'long (7-10)' ELSE 'very long (11+)' END AS word_length_category, COUNT(DISTINCT c.word_cited_id) AS unique_words, COUNT(*) AS total_occurrences FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY word_length_category ORDER BY MIN(LENGTH(c.word_cited_id))"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.15",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Consider only papers that have been cited at least once; More rigorous definition of 'cited'",
-    "SQL": "SELECT COUNT(DISTINCT c.word_cited_id) AS words_in_cited_ai_papers FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' AND c.paper_id IN (SELECT cited_paper_id FROM cites)"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.16",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Calculate word diversity score (Shannon index) for AI papers; Measure vocabulary richness",
-    "SQL": "WITH word_probs AS (SELECT c.word_cited_id, COUNT(*) AS freq, SUM(COUNT(*)) OVER () AS total FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id) SELECT -SUM((freq * 1.0 / total) * LOG(freq * 1.0 / total)) AS shannon_diversity_index, COUNT(*) AS total_words FROM word_probs"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.17",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Break down by subcategories if class_label has hierarchical structure; Analyze words per AI subfield",
-    "SQL": "SELECT p.class_label, COUNT(DISTINCT c.word_cited_id) AS unique_words FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label LIKE 'AI%' GROUP BY p.class_label ORDER BY unique_words DESC"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.18",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Find the most 'representative' words for AI class using TF-IDF like approach",
-    "SQL": "WITH class_word_counts AS (SELECT p.class_label, c.word_cited_id, COUNT(*) AS word_in_class_count FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.class_label, c.word_cited_id), total_words_per_class AS (SELECT class_label, SUM(word_in_class_count) AS total_words_in_class FROM class_word_counts GROUP BY class_label), global_word_counts AS (SELECT c.word_cited_id, COUNT(*) AS global_count FROM content c GROUP BY c.word_cited_id) SELECT cwc.word_cited_id, cwc.word_in_class_count, ROUND(1.0 * cwc.word_in_class_count / twc.total_words_in_class, 4) AS term_frequency, ROUND(LOG(1.0 * (SELECT COUNT(*) FROM paper) / COUNT(DISTINCT p2.class_label)), 4) AS inverse_document_frequency FROM class_word_counts cwc JOIN total_words_per_class twc ON cwc.class_label = twc.class_label JOIN paper p2 ON cwc.word_cited_id IN (SELECT word_cited_id FROM content JOIN paper ON content.paper_id = paper.paper_id AND paper.class_label = cwc.class_label) WHERE cwc.class_label = 'AI' GROUP BY cwc.word_cited_id, cwc.word_in_class_count, twc.total_words_in_class ORDER BY term_frequency * inverse_document_frequency DESC LIMIT 10"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.19",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Cumulative growth of vocabulary in AI papers over time; Show how new words are introduced",
-    "SQL": "WITH ai_papers_ordered AS (SELECT paper_id FROM paper WHERE class_label = 'AI' ORDER BY paper_id), cumulative_vocabulary AS (SELECT p.paper_id, COUNT(DISTINCT c.word_cited_id) AS cumulative_unique_words FROM ai_papers_ordered p LEFT JOIN content c ON c.paper_id <= p.paper_id AND c.paper_id IN (SELECT paper_id FROM ai_papers_ordered) GROUP BY p.paper_id) SELECT paper_id, cumulative_unique_words, cumulative_unique_words - LAG(cumulative_unique_words, 1, 0) OVER (ORDER BY paper_id) AS new_words_added FROM cumulative_vocabulary ORDER BY paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "2.20",
-    "question": "What is the total number of word cited under that class labelled 'AI'?",
-    "evidence": "Comprehensive analysis: all metrics combined into one report for AI class vocabulary",
-    "SQL": "WITH ai_papers AS (SELECT paper_id FROM paper WHERE class_label = 'AI'), ai_content AS (SELECT c.* FROM content c WHERE c.paper_id IN (SELECT paper_id FROM ai_papers)), stats AS (SELECT (SELECT COUNT(DISTINCT word_cited_id) FROM ai_content) AS unique_words, (SELECT COUNT(*) FROM ai_content) AS total_occurrences, (SELECT COUNT(DISTINCT paper_id) FROM ai_papers) AS ai_paper_count, (SELECT AVG(words_per_paper) FROM (SELECT COUNT(DISTINCT word_cited_id) AS words_per_paper FROM ai_content GROUP BY paper_id)) AS avg_words_per_paper, (SELECT MAX(word_count) FROM (SELECT COUNT(DISTINCT word_cited_id) AS word_count FROM ai_content GROUP BY paper_id)) AS max_words_in_one_paper, (SELECT word_cited_id FROM ai_content GROUP BY word_cited_id ORDER BY COUNT(*) DESC LIMIT 1) AS most_frequent_word, (SELECT COUNT(*) FROM ai_content GROUP BY word_cited_id ORDER BY COUNT(*) DESC LIMIT 1) AS most_frequent_word_count) SELECT unique_words AS total_unique_words_cited, total_occurrences AS total_word_mentions, ai_paper_count AS number_of_ai_papers, ROUND(avg_words_per_paper, 2) AS average_words_per_paper, max_words_in_one_paper, most_frequent_word, most_frequent_word_count FROM stats"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.01",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Simple approach: Find all words in paper 315017, then find all other papers containing those words",
-    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' ORDER BY c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.02",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Include the actual words that are shared between papers",
-    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label, c2.word_cited_id FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' ORDER BY c2.paper_id, c2.word_cited_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.03",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Count how many words each other paper shares with paper 315017",
-    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_word_count FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY shared_word_count DESC"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.04",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Show each other paper with the list of shared words",
-    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, GROUP_CONCAT(DISTINCT c2.word_cited_id) AS shared_words FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.05",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Find papers that share at least 3 words with paper 315017",
-    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_word_count FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label HAVING COUNT(DISTINCT c2.word_cited_id) >= 3 ORDER BY shared_word_count DESC"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.06",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Include information about how many times each word appears in the other paper",
-    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, c2.word_cited_id, COUNT(*) AS occurrences FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label, c2.word_cited_id ORDER BY c2.paper_id, occurrences DESC"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.07",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Find papers that share words but are from a different class than paper 315017",
-    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id INNER JOIN paper p_target ON c1.paper_id = p_target.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' AND p.class_label != p_target.class_label ORDER BY c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.08",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Show only papers that share the most common word from paper 315017",
-    "SQL": "WITH target_word_counts AS (SELECT word_cited_id, COUNT(*) AS freq FROM content WHERE paper_id = '315017' GROUP BY word_cited_id ORDER BY freq DESC LIMIT 1) SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM target_word_counts twc INNER JOIN content c2 ON twc.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c2.paper_id != '315017' ORDER BY c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.09",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Include citation relationship between sharing papers and target paper",
-    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label, CASE WHEN c2.paper_id IN (SELECT citing_paper_id FROM cites WHERE cited_paper_id = '315017') THEN 'cites_target' WHEN c2.paper_id IN (SELECT cited_paper_id FROM cites WHERE citing_paper_id = '315017') THEN 'cited_by_target' ELSE 'no_direct_citation' END AS citation_relation FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' ORDER BY citation_relation, c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.10",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Find papers that share words and are also cited by paper 315017",
-    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id INNER JOIN cites ON c2.paper_id = cites.cited_paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' AND cites.citing_paper_id = '315017' ORDER BY c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.11",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Group results by class label to see which classes share the most words",
-    "SQL": "SELECT p.class_label, COUNT(DISTINCT c2.paper_id) AS number_of_papers, COUNT(DISTINCT c2.word_cited_id) AS total_shared_words FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY p.class_label ORDER BY number_of_papers DESC"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.12",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Show the top 10 papers with the most shared words",
-    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_word_count FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY shared_word_count DESC LIMIT 10"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.13",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Include the total number of words in each sharing paper for context",
-    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_words, (SELECT COUNT(DISTINCT word_cited_id) FROM content WHERE paper_id = c2.paper_id) AS total_words_in_paper FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY shared_words DESC"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.14",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Find papers that share all words with paper 315017",
-    "SQL": "WITH target_words AS (SELECT DISTINCT word_cited_id FROM content WHERE paper_id = '315017'), target_word_count AS (SELECT COUNT(*) AS cnt FROM target_words) SELECT c.paper_id AS other_paper_id, p.class_label FROM content c INNER JOIN paper p ON c.paper_id = p.paper_id CROSS JOIN target_word_count twc WHERE c.paper_id != '315017' AND c.word_cited_id IN (SELECT word_cited_id FROM target_words) GROUP BY c.paper_id, p.class_label HAVING COUNT(DISTINCT c.word_cited_id) = twc.cnt"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.15",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Show papers that share words, ordered by paper ID",
-    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' ORDER BY c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.16",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Show only papers that share at least one word and are from the 'AI' class",
-    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' AND p.class_label = 'AI' ORDER BY c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.17",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Include the frequency of each shared word in paper 315017",
-    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, c2.word_cited_id, c1.freq_in_target FROM (SELECT word_cited_id, COUNT(*) AS freq_in_target FROM content WHERE paper_id = '315017' GROUP BY word_cited_id) c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c2.paper_id != '315017' ORDER BY c2.paper_id, c1.freq_in_target DESC"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.18",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Find papers that share words but are not cited by paper 315017",
-    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' AND c2.paper_id NOT IN (SELECT cited_paper_id FROM cites WHERE citing_paper_id = '315017') ORDER BY c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.19",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Show the most frequent shared words across all other papers",
-    "SQL": "SELECT c2.word_cited_id, COUNT(DISTINCT c2.paper_id) AS sharing_papers_count FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.word_cited_id ORDER BY sharing_papers_count DESC"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "3.20",
-    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
-    "evidence": "Complete overview: all papers sharing words with counts and class labels",
-    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_word_count, GROUP_CONCAT(DISTINCT c2.word_cited_id) AS shared_words FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY shared_word_count DESC, c2.paper_id"
-  },
-  {
-    "db_id": "citeseer",
-    "candidate_id": "4.01",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Count occurrences of each word_cited_id grouped by word_cited_id; order by COUNT(paper_id) DESC; limit 1 to get most cited word and its paper count.",
     "SQL": "SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id ORDER BY paper_count DESC LIMIT 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.02",
+    "candidate_id": "2.02",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Aggregate content by word_cited_id; compute COUNT(DISTINCT paper_id); select word(s) where count equals maximum count over all words.",
     "SQL": "SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(DISTINCT paper_id) = (SELECT MAX(cnt) FROM (SELECT COUNT(DISTINCT paper_id) AS cnt FROM content GROUP BY word_cited_id));"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.03",
+    "candidate_id": "2.03",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Use subquery to compute counts per word; order descending; fetch top 1 row.",
     "SQL": "SELECT t.word_cited_id, t.paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id) t ORDER BY t.paper_count DESC LIMIT 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.04",
+    "candidate_id": "2.04",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Compute COUNT(DISTINCT paper_id) OVER (PARTITION BY word_cited_id); rank by count descending; select rank = 1.",
     "SQL": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count, RANK() OVER (ORDER BY COUNT(DISTINCT paper_id) DESC) AS rnk FROM content GROUP BY word_cited_id) sub WHERE rnk = 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.05",
+    "candidate_id": "2.05",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Group by word_cited_id; compute COUNT(*) since (paper_id, word_cited_id) is primary key; order descending; limit 1.",
     "SQL": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id ORDER BY paper_count DESC LIMIT 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.06",
+    "candidate_id": "2.06",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Select word_cited_id with maximum COUNT(*) using ALL comparison.",
     "SQL": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.07",
+    "candidate_id": "2.07",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Compute counts per word; join with subquery that returns max count; filter matching rows.",
     "SQL": "SELECT c.word_cited_id, COUNT(*) AS paper_count FROM content c GROUP BY c.word_cited_id HAVING COUNT(*) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM content GROUP BY word_cited_id) x);"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.08",
+    "candidate_id": "2.08",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Use window function DENSE_RANK over COUNT(*) desc; select dense_rank = 1.",
     "SQL": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(*) AS paper_count, DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS dr FROM content GROUP BY word_cited_id) t WHERE dr = 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.09",
+    "candidate_id": "2.09",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Order grouped result by COUNT(DISTINCT paper_id) descending; fetch first row only.",
     "SQL": "SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id ORDER BY COUNT(DISTINCT paper_id) DESC FETCH FIRST 1 ROW ONLY;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.10",
+    "candidate_id": "2.10",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Nested select: first compute max count; then select word with that count.",
     "SQL": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) = (SELECT MAX(word_freq) FROM (SELECT COUNT(*) AS word_freq FROM content GROUP BY word_cited_id) y);"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.11",
+    "candidate_id": "2.11",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Use correlated subquery comparing COUNT(*) per word to maximum aggregated count.",
     "SQL": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content c GROUP BY word_cited_id HAVING COUNT(*) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM content GROUP BY word_cited_id) m);"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.12",
+    "candidate_id": "2.12",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Compute counts in CTE; select rows where paper_count equals maximum from CTE.",
     "SQL": "WITH word_counts AS (SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id) SELECT word_cited_id, paper_count FROM word_counts WHERE paper_count = (SELECT MAX(paper_count) FROM word_counts);"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.13",
+    "candidate_id": "2.13",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "CTE with COUNT(DISTINCT paper_id); order descending; limit 1.",
     "SQL": "WITH wc AS (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id) SELECT word_cited_id, paper_count FROM wc ORDER BY paper_count DESC LIMIT 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.14",
+    "candidate_id": "2.14",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Select top word by COUNT(*) using TOP 1 syntax.",
     "SQL": "SELECT TOP 1 word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id ORDER BY COUNT(*) DESC;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.15",
+    "candidate_id": "2.15",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Rank words by COUNT(DISTINCT paper_id) descending using ROW_NUMBER; filter row_number = 1.",
     "SQL": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count, ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT paper_id) DESC) AS rn FROM content GROUP BY word_cited_id) s WHERE rn = 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.16",
+    "candidate_id": "2.16",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Group by word; compute COUNT(*); select word where count not less than any other via NOT EXISTS.",
     "SQL": "SELECT w1.word_cited_id, COUNT(*) AS paper_count FROM content w1 GROUP BY w1.word_cited_id HAVING NOT EXISTS (SELECT 1 FROM (SELECT word_cited_id, COUNT(*) AS cnt FROM content GROUP BY word_cited_id) w2 WHERE w2.cnt > COUNT(*));"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.17",
+    "candidate_id": "2.17",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Compute counts per word; order descending; limit 1 offset 0.",
     "SQL": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id ORDER BY paper_count DESC LIMIT 1 OFFSET 0;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.18",
+    "candidate_id": "2.18",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Subquery calculates COUNT(DISTINCT paper_id); outer query orders and selects first.",
     "SQL": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id) q ORDER BY paper_count DESC LIMIT 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.19",
+    "candidate_id": "2.19",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Use DENSE_RANK on COUNT(DISTINCT paper_id); filter rank equals 1.",
     "SQL": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count, DENSE_RANK() OVER (ORDER BY COUNT(DISTINCT paper_id) DESC) AS r FROM content GROUP BY word_cited_id) z WHERE r = 1;"
   },
   {
     "db_id": "citeseer",
-    "candidate_id": "4.20",
+    "candidate_id": "2.20",
     "question": "What is the most cited word? How many papers was that word cited in?",
     "evidence": "Aggregate by word_cited_id; compute COUNT(*); select maximum via scalar subquery; return matching word and count.",
     "SQL": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM content GROUP BY word_cited_id) t);"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.01",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "First identify papers with class_label 'AI' from paper table; Then count distinct word_cited_id from content table for those papers; This gives total unique words cited in AI papers",
+    "SQL": "SELECT COUNT(DISTINCT c.word_cited_id) AS total_words_cited FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.02",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Include all words from AI papers, counting multiple occurrences; Use COUNT(*) instead of DISTINCT to get total citations count",
+    "SQL": "SELECT COUNT(*) AS total_word_occurrences FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.03",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Consider words that are cited in AI papers, but only count each word once per paper; This counts unique word-paper combinations",
+    "SQL": "SELECT COUNT(*) AS unique_word_paper_combinations FROM (SELECT DISTINCT c.word_cited_id, c.paper_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI') AS unique_combinations"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.04",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Compare with total words cited in all papers to understand proportion; Use subquery to get both totals",
+    "SQL": "SELECT COUNT(DISTINCT c.word_cited_id) AS ai_words, (SELECT COUNT(DISTINCT word_cited_id) FROM content) AS total_words, ROUND(100.0 * COUNT(DISTINCT c.word_cited_id) / (SELECT COUNT(DISTINCT word_cited_id) FROM content), 2) AS percentage FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.05",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Focus only on words that appear in citation relationships; Join with cites table to ensure words are from papers that are part of citation network",
+    "SQL": "SELECT COUNT(DISTINCT c.word_cited_id) AS words_in_cited_ai_papers FROM content c JOIN paper p ON c.paper_id = p.paper_id JOIN cites ON c.paper_id = cites.cited_paper_id OR c.paper_id = cites.citing_paper_id WHERE p.class_label = 'AI'"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.06",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Include word frequency information; Show top 10 words in AI papers with their counts",
+    "SQL": "SELECT c.word_cited_id, COUNT(*) AS frequency, COUNT(DISTINCT c.paper_id) AS papers FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id ORDER BY frequency DESC LIMIT 10"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.07",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Calculate average words per AI paper; This gives insight into vocabulary richness",
+    "SQL": "SELECT AVG(words_per_paper) AS avg_words_per_ai_paper FROM (SELECT c.paper_id, COUNT(DISTINCT c.word_cited_id) AS words_per_paper FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.paper_id) AS paper_words"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.08",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Find words that are unique to AI papers (don't appear in other classes); Use LEFT JOIN with non-AI papers",
+    "SQL": "WITH ai_words AS (SELECT DISTINCT word_cited_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'), non_ai_words AS (SELECT DISTINCT word_cited_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label != 'AI') SELECT COUNT(*) AS unique_ai_words FROM ai_words WHERE word_cited_id NOT IN (SELECT word_cited_id FROM non_ai_words)"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.09",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Consider temporal distribution if paper_id contains chronological information; Analyze word usage over time",
+    "SQL": "SELECT SUBSTR(p.paper_id, 1, 4) AS year_prefix, COUNT(DISTINCT c.word_cited_id) AS unique_words FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY SUBSTR(p.paper_id, 1, 4) ORDER BY year_prefix"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.10",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Focus on words that are cited most frequently in AI papers; Show word popularity ranking",
+    "SQL": "SELECT c.word_cited_id, COUNT(*) AS citation_frequency, RANK() OVER (ORDER BY COUNT(*) DESC) AS popularity_rank FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id ORDER BY citation_frequency DESC LIMIT 20"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.11",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Include statistical measures: mean, median, mode of word frequencies in AI papers",
+    "SQL": "WITH word_frequencies AS (SELECT c.word_cited_id, COUNT(*) AS freq FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id) SELECT AVG(freq) AS mean_frequency, MIN(freq) AS min_frequency, MAX(freq) AS max_frequency, COUNT(*) AS total_unique_words, SUM(freq) AS total_occurrences FROM word_frequencies"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.12",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Compare AI papers with non-AI papers; Show vocabulary overlap analysis",
+    "SQL": "WITH ai_words AS (SELECT DISTINCT word_cited_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'), non_ai_words AS (SELECT DISTINCT word_cited_id FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label != 'AI') SELECT (SELECT COUNT(*) FROM ai_words) AS ai_vocabulary_size, (SELECT COUNT(*) FROM non_ai_words) AS non_ai_vocabulary_size, (SELECT COUNT(*) FROM ai_words WHERE word_cited_id IN (SELECT word_cited_id FROM non_ai_words)) AS common_words"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.13",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Include only words that appear in at least X different AI papers; Filter for significance",
+    "SQL": "SELECT COUNT(*) AS significant_words FROM (SELECT c.word_cited_id, COUNT(DISTINCT c.paper_id) AS paper_count FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id HAVING COUNT(DISTINCT c.paper_id) >= 3) AS significant_words"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.14",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Analyze word length distribution in AI papers; Check if AI uses longer/shorter words",
+    "SQL": "SELECT CASE WHEN LENGTH(c.word_cited_id) <= 3 THEN 'short (1-3)' WHEN LENGTH(c.word_cited_id) <= 6 THEN 'medium (4-6)' WHEN LENGTH(c.word_cited_id) <= 10 THEN 'long (7-10)' ELSE 'very long (11+)' END AS word_length_category, COUNT(DISTINCT c.word_cited_id) AS unique_words, COUNT(*) AS total_occurrences FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY word_length_category ORDER BY MIN(LENGTH(c.word_cited_id))"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.15",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Consider only papers that have been cited at least once; More rigorous definition of 'cited'",
+    "SQL": "SELECT COUNT(DISTINCT c.word_cited_id) AS words_in_cited_ai_papers FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' AND c.paper_id IN (SELECT cited_paper_id FROM cites)"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.16",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Calculate word diversity score (Shannon index) for AI papers; Measure vocabulary richness",
+    "SQL": "WITH word_probs AS (SELECT c.word_cited_id, COUNT(*) AS freq, SUM(COUNT(*)) OVER () AS total FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI' GROUP BY c.word_cited_id) SELECT -SUM((freq * 1.0 / total) * LOG(freq * 1.0 / total)) AS shannon_diversity_index, COUNT(*) AS total_words FROM word_probs"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.17",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Break down by subcategories if class_label has hierarchical structure; Analyze words per AI subfield",
+    "SQL": "SELECT p.class_label, COUNT(DISTINCT c.word_cited_id) AS unique_words FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label LIKE 'AI%' GROUP BY p.class_label ORDER BY unique_words DESC"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.18",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Find the most 'representative' words for AI class using TF-IDF like approach",
+    "SQL": "WITH class_word_counts AS (SELECT p.class_label, c.word_cited_id, COUNT(*) AS word_in_class_count FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.class_label, c.word_cited_id), total_words_per_class AS (SELECT class_label, SUM(word_in_class_count) AS total_words_in_class FROM class_word_counts GROUP BY class_label), global_word_counts AS (SELECT c.word_cited_id, COUNT(*) AS global_count FROM content c GROUP BY c.word_cited_id) SELECT cwc.word_cited_id, cwc.word_in_class_count, ROUND(1.0 * cwc.word_in_class_count / twc.total_words_in_class, 4) AS term_frequency, ROUND(LOG(1.0 * (SELECT COUNT(*) FROM paper) / COUNT(DISTINCT p2.class_label)), 4) AS inverse_document_frequency FROM class_word_counts cwc JOIN total_words_per_class twc ON cwc.class_label = twc.class_label JOIN paper p2 ON cwc.word_cited_id IN (SELECT word_cited_id FROM content JOIN paper ON content.paper_id = paper.paper_id AND paper.class_label = cwc.class_label) WHERE cwc.class_label = 'AI' GROUP BY cwc.word_cited_id, cwc.word_in_class_count, twc.total_words_in_class ORDER BY term_frequency * inverse_document_frequency DESC LIMIT 10"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.19",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Cumulative growth of vocabulary in AI papers over time; Show how new words are introduced",
+    "SQL": "WITH ai_papers_ordered AS (SELECT paper_id FROM paper WHERE class_label = 'AI' ORDER BY paper_id), cumulative_vocabulary AS (SELECT p.paper_id, COUNT(DISTINCT c.word_cited_id) AS cumulative_unique_words FROM ai_papers_ordered p LEFT JOIN content c ON c.paper_id <= p.paper_id AND c.paper_id IN (SELECT paper_id FROM ai_papers_ordered) GROUP BY p.paper_id) SELECT paper_id, cumulative_unique_words, cumulative_unique_words - LAG(cumulative_unique_words, 1, 0) OVER (ORDER BY paper_id) AS new_words_added FROM cumulative_vocabulary ORDER BY paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "3.20",
+    "question": "What is the total number of word cited under that class labelled 'AI'?",
+    "evidence": "Comprehensive analysis: all metrics combined into one report for AI class vocabulary",
+    "SQL": "WITH ai_papers AS (SELECT paper_id FROM paper WHERE class_label = 'AI'), ai_content AS (SELECT c.* FROM content c WHERE c.paper_id IN (SELECT paper_id FROM ai_papers)), stats AS (SELECT (SELECT COUNT(DISTINCT word_cited_id) FROM ai_content) AS unique_words, (SELECT COUNT(*) FROM ai_content) AS total_occurrences, (SELECT COUNT(DISTINCT paper_id) FROM ai_papers) AS ai_paper_count, (SELECT AVG(words_per_paper) FROM (SELECT COUNT(DISTINCT word_cited_id) AS words_per_paper FROM ai_content GROUP BY paper_id)) AS avg_words_per_paper, (SELECT MAX(word_count) FROM (SELECT COUNT(DISTINCT word_cited_id) AS word_count FROM ai_content GROUP BY paper_id)) AS max_words_in_one_paper, (SELECT word_cited_id FROM ai_content GROUP BY word_cited_id ORDER BY COUNT(*) DESC LIMIT 1) AS most_frequent_word, (SELECT COUNT(*) FROM ai_content GROUP BY word_cited_id ORDER BY COUNT(*) DESC LIMIT 1) AS most_frequent_word_count) SELECT unique_words AS total_unique_words_cited, total_occurrences AS total_word_mentions, ai_paper_count AS number_of_ai_papers, ROUND(avg_words_per_paper, 2) AS average_words_per_paper, max_words_in_one_paper, most_frequent_word, most_frequent_word_count FROM stats"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.01",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Simple approach: Find all words in paper 315017, then find all other papers containing those words",
+    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' ORDER BY c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.02",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Include the actual words that are shared between papers",
+    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label, c2.word_cited_id FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' ORDER BY c2.paper_id, c2.word_cited_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.03",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Count how many words each other paper shares with paper 315017",
+    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_word_count FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY shared_word_count DESC"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.04",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Show each other paper with the list of shared words",
+    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, GROUP_CONCAT(DISTINCT c2.word_cited_id) AS shared_words FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.05",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Find papers that share at least 3 words with paper 315017",
+    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_word_count FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label HAVING COUNT(DISTINCT c2.word_cited_id) >= 3 ORDER BY shared_word_count DESC"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.06",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Include information about how many times each word appears in the other paper",
+    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, c2.word_cited_id, COUNT(*) AS occurrences FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label, c2.word_cited_id ORDER BY c2.paper_id, occurrences DESC"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.07",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Find papers that share words but are from a different class than paper 315017",
+    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id INNER JOIN paper p_target ON c1.paper_id = p_target.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' AND p.class_label != p_target.class_label ORDER BY c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.08",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Show only papers that share the most common word from paper 315017",
+    "SQL": "WITH target_word_counts AS (SELECT word_cited_id, COUNT(*) AS freq FROM content WHERE paper_id = '315017' GROUP BY word_cited_id ORDER BY freq DESC LIMIT 1) SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM target_word_counts twc INNER JOIN content c2 ON twc.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c2.paper_id != '315017' ORDER BY c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.09",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Include citation relationship between sharing papers and target paper",
+    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label, CASE WHEN c2.paper_id IN (SELECT citing_paper_id FROM cites WHERE cited_paper_id = '315017') THEN 'cites_target' WHEN c2.paper_id IN (SELECT cited_paper_id FROM cites WHERE citing_paper_id = '315017') THEN 'cited_by_target' ELSE 'no_direct_citation' END AS citation_relation FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' ORDER BY citation_relation, c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.10",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Find papers that share words and are also cited by paper 315017",
+    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id INNER JOIN cites ON c2.paper_id = cites.cited_paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' AND cites.citing_paper_id = '315017' ORDER BY c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.11",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Group results by class label to see which classes share the most words",
+    "SQL": "SELECT p.class_label, COUNT(DISTINCT c2.paper_id) AS number_of_papers, COUNT(DISTINCT c2.word_cited_id) AS total_shared_words FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY p.class_label ORDER BY number_of_papers DESC"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.12",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Show the top 10 papers with the most shared words",
+    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_word_count FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY shared_word_count DESC LIMIT 10"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.13",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Include the total number of words in each sharing paper for context",
+    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_words, (SELECT COUNT(DISTINCT word_cited_id) FROM content WHERE paper_id = c2.paper_id) AS total_words_in_paper FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY shared_words DESC"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.14",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Find papers that share all words with paper 315017",
+    "SQL": "WITH target_words AS (SELECT DISTINCT word_cited_id FROM content WHERE paper_id = '315017'), target_word_count AS (SELECT COUNT(*) AS cnt FROM target_words) SELECT c.paper_id AS other_paper_id, p.class_label FROM content c INNER JOIN paper p ON c.paper_id = p.paper_id CROSS JOIN target_word_count twc WHERE c.paper_id != '315017' AND c.word_cited_id IN (SELECT word_cited_id FROM target_words) GROUP BY c.paper_id, p.class_label HAVING COUNT(DISTINCT c.word_cited_id) = twc.cnt"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.15",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Show papers that share words, ordered by paper ID",
+    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' ORDER BY c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.16",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Show only papers that share at least one word and are from the 'AI' class",
+    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' AND p.class_label = 'AI' ORDER BY c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.17",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Include the frequency of each shared word in paper 315017",
+    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, c2.word_cited_id, c1.freq_in_target FROM (SELECT word_cited_id, COUNT(*) AS freq_in_target FROM content WHERE paper_id = '315017' GROUP BY word_cited_id) c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c2.paper_id != '315017' ORDER BY c2.paper_id, c1.freq_in_target DESC"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.18",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Find papers that share words but are not cited by paper 315017",
+    "SQL": "SELECT DISTINCT c2.paper_id AS other_paper_id, p.class_label FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' AND c2.paper_id NOT IN (SELECT cited_paper_id FROM cites WHERE citing_paper_id = '315017') ORDER BY c2.paper_id"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.19",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Show the most frequent shared words across all other papers",
+    "SQL": "SELECT c2.word_cited_id, COUNT(DISTINCT c2.paper_id) AS sharing_papers_count FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.word_cited_id ORDER BY sharing_papers_count DESC"
+  },
+  {
+    "db_id": "citeseer",
+    "candidate_id": "4.20",
+    "question": "For all words cited in paper ID 315017, state the other paper ID and class label which also cited those words.",
+    "evidence": "Complete overview: all papers sharing words with counts and class labels",
+    "SQL": "SELECT c2.paper_id AS other_paper_id, p.class_label, COUNT(DISTINCT c2.word_cited_id) AS shared_word_count, GROUP_CONCAT(DISTINCT c2.word_cited_id) AS shared_words FROM content c1 INNER JOIN content c2 ON c1.word_cited_id = c2.word_cited_id INNER JOIN paper p ON c2.paper_id = p.paper_id WHERE c1.paper_id = '315017' AND c2.paper_id != '315017' GROUP BY c2.paper_id, p.class_label ORDER BY shared_word_count DESC, c2.paper_id"
   },
   {
     "db_id": "citeseer",

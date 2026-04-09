@@ -11,7 +11,8 @@ Kleinere und schnelleres Modelle denkbar gewesen zu verwenden, da Qwen2.5 zu lan
 Batch-Größe stark reduzieren
 Das BIRD-Dataset muss heruntergeladen werden: link hinzufügen!
 
-
+Aus dem Paper: Ausf¨uhrungsbasiertes Feedback Um L¨osungen als richtig oder falsch zu kennzeichnen,
+betten wir jedes relevante Datenbankschema in eine lokale SQLite-Instanz ein, müssen wir das erwähnen?
 
 
 

@@ -8,3 +8,24 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+gitignore
+
+# Große Dateien (nicht hochladen!)
+*.sqlite
+*.sqlite3
+*.db
+train_gold.sql
+
+# Generierte Ausgaben (nicht hochladen!)
+address.json
+candidates_*.json
+gold_queries_*/
+
+# Python Cache
+__pycache__/
+*.pyc
+# IDE
+.idea/
+.vscode/
+# Ollama Logs
+ollama.log

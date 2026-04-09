@@ -1,0 +1,402 @@
+[
+  {
+    "candidate_id": "1.01",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.02",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.03",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.04",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.05",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.06",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.07",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.08",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.09",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.10",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.11",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.12",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.13",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.14",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.15",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.16",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.17",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.18",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.19",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "1.20",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "2.01",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "2.02",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.03",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.04",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "2.05",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.06",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "2.07",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.08",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "2.09",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.10",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.11",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.12",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.13",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.14",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.15",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "2.16",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.17",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "2.18",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.19",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "2.20",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.01",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.02",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.03",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.04",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.05",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.06",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.07",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.08",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "3.09",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.10",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.11",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.12",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.13",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.14",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.15",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.16",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.17",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.18",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.19",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "3.20",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.01",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.02",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.03",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.04",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.05",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "4.06",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.07",
+    "db_id": "restaurant",
+    "correct": true
+  },
+  {
+    "candidate_id": "4.08",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.09",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.10",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.11",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.12",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.13",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.14",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.15",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.16",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.17",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.18",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.19",
+    "db_id": "restaurant",
+    "correct": false
+  },
+  {
+    "candidate_id": "4.20",
+    "db_id": "restaurant",
+    "correct": false
+  }
+]

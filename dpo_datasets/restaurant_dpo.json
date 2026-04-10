@@ -1,0 +1,56 @@
+[
+  {
+    "prompt": "Question: What types of food are served at the 4 top-reviewed restaurants?\n\nDatabase: restaurant",
+    "chosen": "SELECT food_type FROM generalinfo ORDER BY review DESC LIMIT 4",
+    "rejected": "SELECT id_restaurant, food_type FROM generalinfo ORDER BY review DESC LIMIT 4",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  },
+  {
+    "prompt": "Question: What types of food are served at the 4 top-reviewed restaurants?\n\nDatabase: restaurant",
+    "chosen": "WITH top_restaurants AS (SELECT id_restaurant FROM generalinfo ORDER BY review DESC LIMIT 4) SELECT food_type FROM generalinfo WHERE id_restaurant IN (SELECT id_restaurant FROM top_restaurants)",
+    "rejected": "SELECT id_restaurant, food_type FROM generalinfo ORDER BY review DESC LIMIT 4",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  },
+  {
+    "prompt": "Question: What types of food are served at the 4 top-reviewed restaurants?\n\nDatabase: restaurant",
+    "chosen": "SELECT food_type FROM generalinfo WHERE review IS NOT NULL ORDER BY review DESC LIMIT 4",
+    "rejected": "SELECT id_restaurant, food_type FROM generalinfo ORDER BY review DESC LIMIT 4",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  },
+  {
+    "prompt": "Question: What types of food are served at the 4 top-reviewed restaurants?\n\nDatabase: restaurant",
+    "chosen": "SELECT food_type FROM (SELECT food_type, ROW_NUMBER() OVER (ORDER BY review DESC) AS rank FROM generalinfo) WHERE rank <= 4",
+    "rejected": "SELECT id_restaurant, food_type FROM generalinfo ORDER BY review DESC LIMIT 4",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  },
+  {
+    "prompt": "Question: What types of food are served at the 4 top-reviewed restaurants?\n\nDatabase: restaurant",
+    "chosen": "SELECT food_type FROM generalinfo ORDER BY review DESC NULLS LAST LIMIT 4",
+    "rejected": "SELECT id_restaurant, food_type FROM generalinfo ORDER BY review DESC LIMIT 4",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  },
+  {
+    "prompt": "Question: What types of food are served at the 4 top-reviewed restaurants?\n\nDatabase: restaurant",
+    "chosen": "SELECT food_type FROM generalinfo WHERE review IS NOT NULL ORDER BY review DESC LIMIT 4",
+    "rejected": "SELECT id_restaurant, food_type FROM generalinfo ORDER BY review DESC LIMIT 4",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  },
+  {
+    "prompt": "Question: How many restaurants in the city of Richmond serve Mediterranean food?\n\nDatabase: restaurant",
+    "chosen": "SELECT COUNT(*) FROM generalinfo WHERE LOWER(city) = LOWER('Richmond') AND LOWER(food_type) = LOWER('Mediterranean')",
+    "rejected": "SELECT COUNT(*) FROM generalinfo WHERE city = 'Richmond' AND food_type = 'Mediterranean'",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  },
+  {
+    "prompt": "Question: List all the cities in Sonoma County.\n\nDatabase: restaurant",
+    "chosen": "SELECT city FROM geographic WHERE LOWER(county) = LOWER('Sonoma County')",
+    "rejected": "SELECT city FROM geographic WHERE county = 'Sonoma County'",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  },
+  {
+    "prompt": "Question: List all the cities in Sonoma County.\n\nDatabase: restaurant",
+    "chosen": "SELECT city FROM geographic WHERE county LIKE '%Sonoma%' AND county LIKE '%County%'",
+    "rejected": "SELECT city FROM geographic WHERE county = 'Sonoma County'",
+    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry.This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \nIn the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries.During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \nLastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+  }
+]

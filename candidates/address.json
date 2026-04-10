@@ -1,12 +1,4 @@
-{
-  "metadata": {
-    "input_file": "address_from_OG_with_ids.json.JSON",
-    "total_questions": 50,
-    "total_candidates": 500,
-    "candidates_per_question": 10,
-    "expected_candidates": 500
-  },
-  "candidates": [
+[
     {
       "candidate_id": "1.01",
       "db_id": "address",
@@ -4008,4 +4000,3 @@
       "SQL": "SELECT DISTINCT T1.area_code FROM area_code AS T1 INNER JOIN country AS T2 ON T1.zip_code = T2.zip_code INNER JOIN state AS T3 ON T2.state = T3.abbreviation GROUP BY T1.zip_code HAVING T2.county = 'PHILLIPS' AND T3.name = 'Montana'"
     }
   ]
-}

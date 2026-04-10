@@ -1,0 +1,55 @@
+# Basis-Modell
+base_model: Qwen/Qwen2.5-7B-Instruct
+model_type: AutoModelForCausalLM
+tokenizer_type: AutoTokenizer
+
+# Chat-Template für Qwen2.5 (wichtig für korrekte Formatierung)
+chat_template: qwen3
+
+# Dataset-Konfiguration
+datasets:
+  - path: ./../first_round_sft_datasets/sft_candidates.json  #Daten-Pfad
+    type: chat_template
+    split: train
+    # Nur Assistant-Antworten trainieren
+    roles_to_train: ["assistant"]
+    train_on_eos: last
+
+# Ausgabeverzeichnis
+output_dir: ./outputs/round_one_qwen_sft
+
+# LoRA/QLoRA Konfiguration
+adapter: qlora
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_linear: true
+
+# 4-Bit Quantisierung (für kleinere GPUs, vllt nicht nötig?)
+load_in_4bit: true
+bnb_4bit_quant_type: nf4
+bnb_4bit_compute_dtype: bfloat16
+
+# Training Parameter
+sequence_len: 2048  # Max. Länge
+micro_batch_size: 2
+gradient_accumulation_steps: 4
+num_epochs: 3
+learning_rate: 2e-5
+optimizer: paged_adamw_8bit
+
+# Hardware-Optimierungen
+flash_attention: true
+bf16: true  # falls GPU unterstützt?
+gradient_checkpointing: true
+gradient_checkpointing_kwargs:
+  use_reentrant: false
+
+# Logging
+logging_steps: 10
+save_steps: 500
+wandb_project: qwen_sft_sql
+
+# Wichtig: Spezielle Tokens für Qwen
+special_tokens:
+  eos_token: <|im_end|>

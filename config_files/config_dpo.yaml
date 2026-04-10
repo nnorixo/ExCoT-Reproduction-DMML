@@ -1,0 +1,125 @@
+# config_dpo.yaml - Optimiert für Qwen2.5-7B mit DPO
+
+base_model: Qwen/Qwen2.5-7B-Instruct
+strict: false
+
+# Chat Template für Qwen 2.5
+chat_template: qwen_25
+rl: dpo
+
+# Dataset Konfiguration
+datasets:
+  - path: ./../first_round_dpo_datasets/all_dpo_combined.json  # Pfad wurde manuell angepasst
+    type: chat_template.default
+    field_prompt: prompt
+    field_chosen: chosen
+    field_rejected: rejected
+    field_system: system
+    # Alternative falls Ihr Dataset conversation-Format hat:
+    # field_messages: conversation
+    # message_field_role: role
+    # message_field_content: content
+
+# Falls Sie separate Train/Test Datasets haben:
+# train_on_split: train
+# eval_on_split: validation
+val_set_size: 0.05  # 5% für Validierung
+
+# Ausgabeverzeichnis
+output_dir: /../first_round_model/dpo-output  # Pfad wird manuell angepasst
+
+# Sequenzlänge (Qwen 2.5 unterstützt bis zu 32,768 Token)
+sequence_len: 8192  # Wird später noch angepasst
+
+# DPO-spezifische Einstellungen
+sample_packing: false  # Wichtig: DPO funktioniert nicht mit Sample Packing
+pad_to_sequence_len: true  # Vermeidet Torch Bug
+
+# Training Batch-Einstellungen
+gradient_accumulation_steps: 1
+micro_batch_size: 32  # Im Optimalfall, wird evtl. noch angepasst
+
+# Epochen
+num_epochs: 1  # Kann auf 2-3 erhöht werden bei Bedarf
+
+# Optimizer
+optimizer: adamw_torch
+lr_scheduler: constant
+learning_rate: 5e-5  # DPO typisch: 1e-5 bis 1e-4
+
+# DPO spezifische Parameter
+beta: 0.1  # DPO Temperatur (typisch: 0.1 - 0.5)
+dpo_loss_type: sigmoid  # sigmoid, ipo, oder kto_pair
+dpo_beta: 0.1  # Falls dpo_loss_type="ipo"
+label_smoothing: 0.0  # Label Smoothing für DPO
+
+# Precision
+bf16: auto  # Qwen2.5-7B ist bf16 trainiert
+fp16: false
+tf32: true  # Für bessere Performance auf A100/H100
+
+# Speicher-Optimierungen
+gradient_checkpointing: true
+flash_attention: true  # Nur auf Ampere, Ada, oder Hopper GPUs
+load_in_8bit: false  # Für sehr große Modelle
+load_in_4bit: false  # Für sehr große Modelle
+
+# LoRA Konfiguration (Parameter-effizientes Fine-tuning)
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+lora_target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# Wenn Sie Full Fine-tuning möchten, kommentieren Sie LoRA aus:
+# lora_r:
+# lora_alpha:
+# lora_dropout:
+
+# Logging & Checkpoints
+wandb_project: dpo_sql_qwen
+wandb_entity: ""  # Optional: Ihr WandB Username/Team
+wandb_watch: gradients
+wandb_name: qwen_dpo_run_1
+wandb_log_model: false
+
+logging_steps: 1
+eval_steps: 100  # Wie oft evaluiert werden soll
+save_steps: 500  # Wie oft Checkpoints gespeichert werden
+save_total_limit: 3  # Maximale Anzahl an Checkpoints
+saves_per_epoch: 1  # Kann auf 2-3 erhöht werden
+
+warmup_steps: 0  # Kein Warmup bei constant scheduler
+weight_decay: 0.01
+max_grad_norm: 1.0
+
+# Seed für Reproduzierbarkeit
+seed: 42
+
+# Evaluation während des Trainings
+eval_batch_size: 32  # Gleiche Batch-Größe wie Training
+eval_sample_packing: false
+
+# Spezielle Token für Qwen
+special_tokens:
+  bos_token: "<|im_start|>"
+  eos_token: "<|im_end|>"
+  pad_token: "<|endoftext|>"
+  unk_token: "<|endoftext|>"
+
+# Tokenizer Konfiguration
+tokenizer: Qwen/Qwen2.5-7B-Instruct
+trust_remote_code: true
+use_fast_tokenizer: true
+
+# Resuming von Checkpoints
+# resume_from_checkpoint: /workspace/dpo-output/checkpoint-500
+
+# DeepSpeed Option (für sehr große Modelle oder wenn Sie Speicherprobleme haben)
+# deepspeed: deepspeed_configs/zero2.json

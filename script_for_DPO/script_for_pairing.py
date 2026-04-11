@@ -14,10 +14,10 @@ def save_json(data: List[dict], file_path: str) -> None:
         json.dump(data, f, indent=2, ensure_ascii=False)
 
 def create_dpo_pairs(
-    candidates_file: str,
-    preferences_file: str,
-    output_file: str,
-    db_name: str
+        candidates_file: str,
+        preferences_file: str,
+        output_file: str,
+        db_name: str
 ) -> None:
     """
     Erstellt DPO-Paare aus Kandidaten und Präferenzdaten.
@@ -60,16 +60,26 @@ def create_dpo_pairs(
                 # Nimm die erste rejected (oder randomisieren)
                 rejected = rejected_list[0]
 
-                # Erstelle Eintrag im gewünschten Format (user_defined.default)
+                # Erstelle Eintrag im gewünschten Format
                 dpo_entry = {
-                    "prompt": f"Question: {question}\n\nDatabase: {db_name}",
-                    "chosen": chosen.get("SQL", ""),
-                    "rejected": rejected.get("SQL", ""),
-                    "system": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry." \
-                    "This process involves a chain-of-thought (CoT) approach, which includes a ’divide and conquer’ strategy. \n"
-                    "In the ’divide’ phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries." \
-                    "During the ’conquer’ phase, we aggregate the solutions of these sub-problems to form the final response. \n"
-                    "Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+                    "messages": [
+                        {
+                            "role": "system",
+                            "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+                        },
+                        {
+                            "role": "user",
+                            "content": f"Question: {question}\n\nDatabase: {db_name}"
+                        }
+                    ],
+                    "chosen": {
+                        "role": "assistant",
+                        "content": chosen.get("SQL", "")
+                    },
+                    "rejected": {
+                        "role": "assistant",
+                        "content": rejected.get("SQL", "")
+                    }
                 }
                 dpo_dataset.append(dpo_entry)
 
@@ -79,9 +89,9 @@ def create_dpo_pairs(
     print(f"Gespeichert in: {output_file}")
 
 def process_all_datasets(
-    data_dir: str,
-    output_dir: str,
-    file_pairs: List[tuple]
+        data_dir: str,
+        output_dir: str,
+        file_pairs: List[tuple]
 ) -> None:
     """
     Verarbeitet alle Datasets.
@@ -111,11 +121,11 @@ if __name__ == "__main__":
 
     # Definieren Sie alle Ihre Dateipaare
     file_pairs = [
-        ("./../candidates/address.json", "./../Sorting/address_sorted.json", "address"),
-        ("./../candidates/citeseer.json", "./../Sorting/citeseer_sorted.json", "citeseer"),
-        ("./../candidates/craftbeer.json", "./../Sorting/craftbeer_sorted.json", "craftbeer"),
-        ("./../candidates/disney.json", "./../Sorting/disney_sorted.json", "disney"),
-        ("./../candidates/restaurant.json", "./../Sorting/restaurant_sorted.json", "restaurant"),
+        ("./../candidates/address.json", "./../candidates_sorted/address_sorted.json", "address"),
+        ("./../candidates/citeseer.json", "./../candidates_sorted/citeseer_sorted.json", "citeseer"),
+        ("./../candidates/craftbeer.json", "./../candidates_sorted/craftbeer_sorted.json", "craftbeer"),
+        ("./../candidates/disney.json", "./../candidates_sorted/disney_sorted.json", "disney"),
+        ("./../candidates/restaurant.json", "./../candidates_sorted/restaurant_sorted.json", "restaurant"),
         # Fügen Sie hier weitere Paare hinzu
         # ("customers.json", "customers_sorted.json", "customers"),
     ]

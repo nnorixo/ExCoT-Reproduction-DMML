@@ -1,0 +1,722 @@
+[
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Among all the citation, what is the percentage of paper ID under the Agents classification?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH all_papers_in_citations AS (SELECT cited_paper_id AS paper_id FROM cites UNION SELECT citing_paper_id FROM cites) SELECT (COUNT(CASE WHEN p.class_label = 'Agents' THEN 1 END) * 100.0 / COUNT(*)) AS percentage FROM all_papers_in_citations apic JOIN paper p ON apic.paper_id = p.paper_id"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT (COUNT(CASE WHEN p.class_label = 'Agents' THEN 1 END) * 100.0 / COUNT(*)) AS percentage FROM cites c JOIN paper p ON c.cited_paper_id = p.paper_id"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Among all the citation, what is the percentage of paper ID under the Agents classification?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT (COUNT(DISTINCT CASE WHEN p.class_label = 'Agents' THEN cnt.paper_id END) * 100.0 / COUNT(DISTINCT cnt.paper_id)) AS percentage FROM content cnt JOIN paper p ON cnt.paper_id = p.paper_id"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT (COUNT(CASE WHEN p.class_label = 'Agents' THEN 1 END) * 100.0 / COUNT(*)) AS percentage FROM cites c JOIN paper p ON c.cited_paper_id = p.paper_id"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id ORDER BY paper_count DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(DISTINCT paper_id) = (SELECT MAX(cnt) FROM (SELECT COUNT(DISTINCT paper_id) AS cnt FROM content GROUP BY word_cited_id));"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT t.word_cited_id, t.paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id) t ORDER BY t.paper_count DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count, RANK() OVER (ORDER BY COUNT(DISTINCT paper_id) DESC) AS rnk FROM content GROUP BY word_cited_id) sub WHERE rnk = 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id ORDER BY paper_count DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT c.word_cited_id, COUNT(*) AS paper_count FROM content c GROUP BY c.word_cited_id HAVING COUNT(*) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM content GROUP BY word_cited_id) x);"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(*) AS paper_count, DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS dr FROM content GROUP BY word_cited_id) t WHERE dr = 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) = (SELECT MAX(word_freq) FROM (SELECT COUNT(*) AS word_freq FROM content GROUP BY word_cited_id) y);"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content c GROUP BY word_cited_id HAVING COUNT(*) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM content GROUP BY word_cited_id) m);"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH word_counts AS (SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id) SELECT word_cited_id, paper_count FROM word_counts WHERE paper_count = (SELECT MAX(paper_count) FROM word_counts);"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH wc AS (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id) SELECT word_cited_id, paper_count FROM wc ORDER BY paper_count DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count, ROW_NUMBER() OVER (ORDER BY COUNT(DISTINCT paper_id) DESC) AS rn FROM content GROUP BY word_cited_id) s WHERE rn = 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id ORDER BY paper_count DESC LIMIT 1 OFFSET 0;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count FROM content GROUP BY word_cited_id) q ORDER BY paper_count DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, paper_count FROM (SELECT word_cited_id, COUNT(DISTINCT paper_id) AS paper_count, DENSE_RANK() OVER (ORDER BY COUNT(DISTINCT paper_id) DESC) AS r FROM content GROUP BY word_cited_id) z WHERE r = 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the most cited word? How many papers was that word cited in?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM content GROUP BY word_cited_id) t);"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT word_cited_id, COUNT(*) AS paper_count FROM content GROUP BY word_cited_id HAVING COUNT(*) >= ALL (SELECT COUNT(*) FROM content GROUP BY word_cited_id);"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the total number of word cited under that class labelled 'AI'?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT COUNT(DISTINCT c.word_cited_id) AS total_words_cited FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT COUNT(*) AS total_word_occurrences FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: What is the total number of word cited under that class labelled 'AI'?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT COUNT(DISTINCT c.word_cited_id) AS words_in_cited_ai_papers FROM content c JOIN paper p ON c.paper_id = p.paper_id JOIN cites ON c.paper_id = cites.cited_paper_id OR c.paper_id = cites.citing_paper_id WHERE p.class_label = 'AI'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT COUNT(*) AS total_word_occurrences FROM content c JOIN paper p ON c.paper_id = p.paper_id WHERE p.class_label = 'AI'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT t.paper_id, p.class_label FROM (SELECT paper_id, COUNT(*) AS word_count FROM content GROUP BY paper_id ORDER BY word_count DESC LIMIT 1) t JOIN paper p ON t.paper_id = p.paper_id;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label HAVING COUNT(*) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM content GROUP BY paper_id));"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH paper_counts AS (SELECT paper_id, COUNT(*) AS word_count FROM content GROUP BY paper_id) SELECT p.paper_id, p.class_label FROM paper_counts pc JOIN paper p ON pc.paper_id = p.paper_id WHERE pc.word_count = (SELECT MAX(word_count) FROM paper_counts);"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT paper_id, class_label FROM (SELECT p.paper_id, p.class_label, RANK() OVER (ORDER BY COUNT(*) DESC) AS rnk FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label) t WHERE rnk = 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT paper_id, class_label FROM (SELECT p.paper_id, p.class_label, COUNT(*) AS word_count FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label) s ORDER BY word_count DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT paper_id, class_label FROM (SELECT p.paper_id, p.class_label, ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS rn FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label) x WHERE rn = 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH pc AS (SELECT paper_id, COUNT(*) AS word_count FROM content GROUP BY paper_id) SELECT p.paper_id, p.class_label FROM pc JOIN paper p ON pc.paper_id = p.paper_id ORDER BY pc.word_count DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM paper p WHERE (SELECT COUNT(*) FROM content c WHERE c.paper_id = p.paper_id) = (SELECT MAX(cnt) FROM (SELECT COUNT(*) AS cnt FROM content GROUP BY paper_id));"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT paper_id, class_label FROM (SELECT p.paper_id, p.class_label, DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS dr FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label) t WHERE dr = 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM (SELECT paper_id, COUNT(DISTINCT word_cited_id) AS word_count FROM content GROUP BY paper_id ORDER BY word_count DESC LIMIT 1) t JOIN paper p ON t.paper_id = p.paper_id;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label HAVING COUNT(DISTINCT c.word_cited_id) = (SELECT MAX(cnt) FROM (SELECT COUNT(DISTINCT word_cited_id) AS cnt FROM content GROUP BY paper_id));"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM (SELECT paper_id, COUNT(*) AS word_count FROM content GROUP BY paper_id) pc JOIN paper p ON pc.paper_id = p.paper_id WHERE pc.word_count = (SELECT MAX(word_count) FROM (SELECT COUNT(*) AS word_count FROM content GROUP BY paper_id));"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC LIMIT 1 OFFSET 0;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH pc AS (SELECT paper_id, COUNT(DISTINCT word_cited_id) AS word_count FROM content GROUP BY paper_id) SELECT p.paper_id, p.class_label FROM pc JOIN paper p ON pc.paper_id = p.paper_id ORDER BY pc.word_count DESC LIMIT 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Which paper ID cited the most word? In which class label does it belongs to?\n\nDatabase: citeseer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT paper_id, class_label FROM (SELECT p.paper_id, p.class_label, RANK() OVER (ORDER BY COUNT(DISTINCT c.word_cited_id) DESC) AS rnk FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label) z WHERE rnk = 1;"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT p.paper_id, p.class_label FROM content c JOIN paper p ON c.paper_id = p.paper_id GROUP BY p.paper_id, p.class_label ORDER BY COUNT(*) DESC FETCH FIRST 1 ROW ONLY;"
+    }
+  }
+]

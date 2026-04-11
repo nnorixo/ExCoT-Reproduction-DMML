@@ -1,0 +1,382 @@
+[
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style = 'American Adjunct Lager' THEN 1 END) AS REAL) * 100 / COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style = 'American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name = 'Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id = br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL) *100 / COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Of all the beer styles produced by Stevens Point Brewery, how many percent do they allot for American Adjunct Lager?\n\nDatabase: craftbeer"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.brewery_id=br.id WHERE br.name='Stevens Point Brewery';"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT CAST(COUNT(CASE WHEN b.style='American Adjunct Lager' THEN 1 END) AS REAL)*100/COUNT(*) AS percent_aal FROM beers b JOIN breweries br ON b.id= b.brewery_id WHERE br.name='Stevens Point Brewery';"
+    }
+  }
+]

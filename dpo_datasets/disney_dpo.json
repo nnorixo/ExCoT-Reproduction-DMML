@@ -1,0 +1,702 @@
+[
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT (SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997) AS revenue_difference_1998_vs_1997"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT SUM(CASE WHEN Year = 1998 THEN Total ELSE 0 END) - SUM(CASE WHEN Year = 1997 THEN Total ELSE 0 END) AS revenue_difference FROM revenue WHERE Year IN (1997, 1998)"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT r1998.Total - r1997.Total AS revenue_difference FROM revenue r1998 INNER JOIN revenue r1997 ON 1=1 WHERE r1998.Year = 1998 AND r1997.Year = 1997"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH revenue_1997 AS (SELECT Total FROM revenue WHERE Year = 1997), revenue_1998 AS (SELECT Total FROM revenue WHERE Year = 1998) SELECT (SELECT Total FROM revenue_1998) - (SELECT Total FROM revenue_1997) AS revenue_difference"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT (SUM(Total) FILTER (WHERE Year = 1998) - SUM(Total) FILTER (WHERE Year = 1997)) AS revenue_difference FROM revenue WHERE Year IN (1997, 1998)"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT MAX(CASE WHEN Year = 1998 THEN Total END) - MAX(CASE WHEN Year = 1997 THEN Total END) AS revenue_difference FROM revenue WHERE Year IN (1997, 1998)"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CASE WHEN (SELECT COUNT(*) FROM revenue WHERE Year = 1997) > 0 AND (SELECT COUNT(*) FROM revenue WHERE Year = 1998) > 0 THEN (SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997) ELSE NULL END AS revenue_difference"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT CAST((SELECT Total FROM revenue WHERE Year = 1998) AS INTEGER) - CAST((SELECT Total FROM revenue WHERE Year = 1997) AS INTEGER) AS revenue_difference"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT ROUND((SELECT Total FROM revenue WHERE Year = 1998) - (SELECT Total FROM revenue WHERE Year = 1997)) AS revenue_difference_rounded"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT COALESCE((SELECT Total FROM revenue WHERE Year = 1998), 0) - COALESCE((SELECT Total FROM revenue WHERE Year = 1997), 0) AS revenue_difference"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: How much more total box office gross did the Walt Disney Company have in revenue in 1998 than in 1997?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT Total - (SELECT Total FROM revenue WHERE Year = 1997) AS revenue_difference FROM revenue WHERE Year = 1998"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT Year, Total, Total - LAG(Total, 1) OVER (ORDER BY Year) AS difference_from_previous_year FROM revenue WHERE Year IN (1997, 1998) ORDER BY Year"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.movie_title = 'Pinocchio'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM director WHERE name = 'Pinocchio'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM director WHERE name IN (SELECT movie_title FROM characters WHERE movie_title = 'Pinocchio')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM director WHERE name = 'Pinocchio' AND EXISTS (SELECT 1 FROM characters WHERE movie_title = 'Pinocchio')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM director WHERE LOWER(name) = LOWER('Pinocchio')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT COALESCE(director, 'Director information not available') AS director FROM director WHERE name = 'Pinocchio'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH pinocchio_movie AS (SELECT movie_title FROM characters WHERE movie_title = 'Pinocchio') SELECT d.director FROM director d INNER JOIN pinocchio_movie pm ON d.name = pm.movie_title"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM director WHERE name = 'Pinocchio' GROUP BY director"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT (SELECT director FROM director WHERE name = 'Pinocchio') AS director_of_pinocchio"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM director WHERE name = 'Pinocchio' UNION SELECT 'Movie not found in database' WHERE NOT EXISTS (SELECT 1 FROM director WHERE name = 'Pinocchio')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM (SELECT director, ROW_NUMBER() OVER (ORDER BY director) AS rn FROM director WHERE name = 'Pinocchio') WHERE rn = 1"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Who is the director of the movie Pinocchio?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT DISTINCT director FROM director WHERE name = 'Pinocchio'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c LEFT JOIN director d ON c.movie_title = d.name WHERE c.movie_title = 'Pinocchio'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM director WHERE name = (SELECT movie_title FROM characters WHERE song = 'Once Upon a Dream')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT d.director FROM director d WHERE EXISTS (SELECT 1 FROM characters c WHERE c.movie_title = d.name AND c.song = 'Once Upon a Dream')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE LOWER(c.song) = LOWER('Once Upon a Dream')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "WITH movie_with_song AS (SELECT movie_title FROM characters WHERE song = 'Once Upon a Dream') SELECT d.director FROM director d INNER JOIN movie_with_song mws ON d.name = mws.movie_title"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song LIKE '%Once Upon a Dream%'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT COALESCE(d.director, 'Director information not available') AS director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream' UNION SELECT 'Song not found in database' WHERE NOT EXISTS (SELECT 1 FROM characters WHERE song = 'Once Upon a Dream')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT director FROM (SELECT d.director, ROW_NUMBER() OVER (ORDER BY d.director) AS rn FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream') WHERE rn = 1"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE TRIM(c.song) = TRIM('Once Upon a Dream')"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: The song \"Once Upon a Dream\" is associated with the movie directed by whom?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT DISTINCT d.director FROM director d INNER JOIN characters c ON d.name = c.movie_title WHERE c.song = 'Once Upon a Dream'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT c.movie_title, d.director FROM characters c INNER JOIN director d ON c.movie_title = d.name WHERE c.song = 'Once Upon a Dream'"
+    }
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "As a Text2SQL assistant, your main task is to formulate an SQL query in response to a given natural language inquiry. This process involves a chain-of-thought (CoT) approach, which includes a 'divide and conquer' strategy. In the 'divide' phase of this CoT process, we break down the presented question into smaller, more manageable sub-problems using pseudo-SQL queries. During the 'conquer' phase, we aggregate the solutions of these sub-problems to form the final response. Lastly, we refine the constructed query in the optimization step, eliminating any unnecessary clauses and conditions to ensure efficiency."
+      },
+      {
+        "role": "user",
+        "content": "Question: Among the movies directed by Wolfgang Reitherman, how many of them are Comedies?\n\nDatabase: disney"
+      }
+    ],
+    "chosen": {
+      "role": "assistant",
+      "content": "SELECT COUNT(DISTINCT mtg.movie_title) FROM director d INNER JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+    },
+    "rejected": {
+      "role": "assistant",
+      "content": "SELECT COUNT(*) AS comedy_count FROM director d INNER JOIN movies_total_gross mtg ON d.name = mtg.movie_title WHERE d.director = 'Wolfgang Reitherman' AND mtg.genre = 'Comedy'"
+    }
+  }
+]

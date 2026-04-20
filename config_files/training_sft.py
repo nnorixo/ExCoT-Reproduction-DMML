@@ -61,8 +61,8 @@ training_args = SFTConfig(
     max_length=1024,
     fp16=True,
 
-    # 🔥 IMPORTANT for chat datasets
-    assistant_only_loss=True,
+    # IMPORTANT for chat datasets
+    # assistant_only_loss=True,
 )
 
 # =========================

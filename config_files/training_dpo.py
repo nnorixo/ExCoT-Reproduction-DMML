@@ -70,8 +70,8 @@ model = get_peft_model(model, peft_config)
 # =========================
 training_args = DPOConfig(
     output_dir="./qwen-dpo-sql",
-    per_device_train_batch_size=1,  # 7B model → small batch
-    gradient_accumulation_steps=4,
+    per_device_train_batch_size=2,  # gerne etwas hoch (2), vorher 1
+    gradient_accumulation_steps=8,  # auch mal etwas hoch probieren, 8 (man rechnet dann Gradient x Batch-Size = effektive Batchgröße), vorher 4
     learning_rate=5e-6,
     num_train_epochs=3,
     logging_steps=10,

@@ -208,15 +208,27 @@ def load_spider_dataset(data_config: DataGenerationConfig, mode: str, cache_dir:
     return db_desc_str, questions, db_folder
 
 
-def dataset_conversion(data_config):
+def dataset_conversion(data_config, max_sample=None, max_dbs=None):
     if data_config.task == "bird":
         db_desc_str, questions, db_folder = load_bird_dataset(data_config, "train", data_config.cache_dir)
     elif data_config.task == "spider":
         db_desc_str, questions, db_folder = load_spider_dataset(data_config, "train", data_config.cache_dir)
     # import pdb; pdb.set_trace()
     all_rows = []
+
+    # Nur bestimmte Datenbanken verwenden
+    allowed_dbs = None
+    if max_dbs:
+        # Nur die ersten max_dbs Datenbanken verwenden
+        allowed_dbs = list(db_desc_str.keys())[:max_dbs]
+    
     for i, question in enumerate(questions):
         db_id = question["db_id"]
+
+        # Filtern nach Datenbanken
+        if allowed_dbs and db_id not in allowed_dbs:
+            continue
+        
         db_desc = db_desc_str[db_id]
         if "evidence" in question:
             all_rows.append(
@@ -236,6 +248,10 @@ def dataset_conversion(data_config):
                 }
             )
 
+        # Maximale Anzahl von Samples begrenzen
+        if max_samples and len(all_rows) >= max_samples:
+            break
+    
     if "evidence" in questions[0]:
         new_dataset = Dataset.from_dict(
             {
@@ -310,6 +326,11 @@ def main():
     parser.add_argument("--model-name", type=str, default=None)
     parser.add_argument("--tp-size", type=int, default=1)
     parser.add_argument("--n", type=int, default=32)
+
+    # Argumente hinzufügen, um Beispiele und Datenbanken zu begrenzen:
+    parser.add_argument("--max-samples", type=int, default=None, help="Maximum number of samples to process")
+    parser.add_argument("--max-dbs", type=int, default=None, help="Maximum number of databases to use")
+    
     args = parser.parse_args()
 
     AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
@@ -343,7 +364,7 @@ def main():
     config_path = args.config_path
     data_gen_config = DataGenerationConfig()
     data_gen_config.load_yaml(config_path)
-    loaded_dataset = dataset_conversion(data_gen_config)
+    loaded_dataset = dataset_conversion(data_gen_config, max_samples=args.max_samples, max_dbs=args.max_dbs)
     processed_dataset = loaded_dataset.map(lambda row: {"messages": construct_gpt_prompt(row)})
     if args.type == "gpt":
         result = submit_requests(processed_dataset, client, task_name=args.data_task_name, n=args.n)

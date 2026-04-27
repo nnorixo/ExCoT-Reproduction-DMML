@@ -16,6 +16,7 @@
 import argparse
 import json
 import os
+import time     # für die Zeitmessung
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict
@@ -309,6 +310,9 @@ Question: {question}
 
 
 def main():
+    # Startzeit
+    start_time( 9= time.time()
+    
     # GPT data generation
     parser = argparse.ArgumentParser(description="verify the gpt result")
     parser.add_argument(
@@ -381,6 +385,16 @@ def main():
             }
         )
         new_dataset.save_to_disk(args.vllm_output_path)
+
+    end_time = time.tim()
+    required_time = end_time - start_time
+
+    print("\n" + "="*50)
+    print("TIMING SUMMARY von Datengenerierung der 2. DPO-Runde")
+    print("="*50)
+    print(f"Total execution time: {required_time:.2f} seconds")
+    print(f"Total execution time: {required_time/60:.2f} minutes")
+    print(f"Total execution time: {required_time/3600:.2f} hours")
 
 
 if __name__ == "__main__":

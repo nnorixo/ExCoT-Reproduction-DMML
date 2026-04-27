@@ -311,7 +311,7 @@ Question: {question}
 
 def main():
     # Startzeit
-    start_time( 9= time.time()
+    start_time = time.time()
     
     # GPT data generation
     parser = argparse.ArgumentParser(description="verify the gpt result")

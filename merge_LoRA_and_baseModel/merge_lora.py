@@ -5,6 +5,7 @@ Merge a LoRA adapter with a base model into a single complete model.
 
 import argparse
 import torch
+import time # für Zeitmessung
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from peft import PeftModel
 
@@ -43,6 +44,8 @@ def merge_lora_model(
     print(f"  - Tokenizer files: {output_path}")
 
 if __name__ == "__main__":
+    start_time = time.time()    # Startzeit
+    
     parser = argparse.ArgumentParser(description="Merge LoRA adapter with base model")
     parser.add_argument("--base-model", type=str, required=True, 
                        help="Path to base model (HuggingFace format)")
@@ -68,3 +71,14 @@ if __name__ == "__main__":
         output_path=args.output,
         torch_dtype=dtype_map[args.dtype]
     )
+
+    end_time = time.time()    #Endzeit
+    required_time = end_time - start_time
+
+    print("\n" + "="*50)
+    print("TIMING SUMMARY für Merging des Basemodels mit dem LoRA-Adapter")
+    print("="*50)
+    print(f"Total execution time: {required_time:.2f} seconds")
+    print(f"Total execution time: {required_time/60:.2f} minutes")
+    print(f"Total execution time: {required_time/3600:.2f} hours")
+

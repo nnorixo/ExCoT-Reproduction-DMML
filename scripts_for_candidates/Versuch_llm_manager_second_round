@@ -1,0 +1,305 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Trained LLM Manager für das feingetunte Qwen2.5-7b-Instruct Modell
+Lädt das Modell direkt aus dem trained_model Verzeichnis
+"""
+
+import json
+import time
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from typing import List, Dict, Any, Optional
+
+class TrainedLLMManager:
+    """
+    Manager für das trainierte Qwen2.5 Modell
+    """
+
+    def __init__(self, model_path: str, temperature: float = 0.7, device: str = "cuda"):
+        """
+        Initialisiert den Trained LLM Manager.
+
+        Args:
+            model_path: Pfad zum trainierten Modell
+            temperature: Temperatur für die Generierung (0.0 bis 1.0)
+            device: "cuda" für GPU, "cpu" für CPU
+        """
+        self.model_path = model_path
+        self.temperature = temperature
+        self.device = device if torch.cuda.is_available() else "cpu"
+
+        if device == "cuda" and not torch.cuda.is_available():
+            print("⚠️ CUDA nicht verfügbar, verwende CPU (sehr langsam für 7B-Modell!)")
+            self.device = "cpu"
+
+        self.system_prompt = self._get_system_prompt()
+
+        # Modell laden
+        self._load_model()
+
+    def _load_model(self):
+        """
+        Lädt das trainierte Modell und den Tokenizer.
+        """
+        print(f"🔧 Lade trainiertes Modell von {self.model_path}...")
+        print(f"   Device: {self.device}")
+
+        try:
+            # Tokenizer laden
+            print("   📝 Lade Tokenizer...")
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                self.model_path,
+                trust_remote_code=True
+            )
+
+            # Padding token setzen falls nötig
+            if self.tokenizer.pad_token is None:
+                self.tokenizer.pad_token = self.tokenizer.eos_token
+
+            # Modell laden
+            print("   🤖 Lade Modell (das kann 1-2 Minuten dauern)...")
+            self.model = AutoModelForCausalLM.from_pretrained(
+                self.model_path,
+                torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+                device_map="auto" if self.device == "cuda" else None,
+                trust_remote_code=True
+            )
+
+            if self.device == "cpu":
+                self.model = self.model.to(self.device)
+
+            print("✅ Modell erfolgreich geladen!")
+
+            # Modellgröße anzeigen
+            if self.device == "cuda":
+                mem_allocated = torch.cuda.memory_allocated() / 1024**3
+                print(f"   GPU Speicher verwendet: {mem_allocated:.2f} GB")
+
+        except Exception as e:
+            print(f"❌ Fehler beim Laden des Modells: {e}")
+            raise
+
+    def _get_system_prompt(self) -> str:
+        """System-Prompt für SQL-Generierung (wie im Training)"""
+        return """You are an expert SQL query generator for the 'address' database schema.
+
+The database has the following tables:
+
+Table: zip_data (zip_code, households, male_population, female_population, avg_house_value)
+Table: country (zip_code, county, city)
+Table: congress (congress_rep_id, party, state, district)
+Table: zip_congress (zip_code, district)
+
+Generate valid SQLite queries. Return ONLY valid JSON with a 'candidates' array.
+Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
+
+    def generate_sql_variants(self,
+                              question: str,
+                              original_sql: str,
+                              original_evidence: str,
+                              num_variants: int = 10) -> List[Dict[str, str]]:
+        """
+        Generiert verschiedene SQL-Varianten für eine Frage.
+        """
+        prompt = self._build_prompt(question, original_sql, original_evidence, num_variants)
+
+        try:
+            return self._generate_with_model(prompt, num_variants)
+        except Exception as e:
+            print(f"⚠️ Fehler bei der Generierung: {e}")
+            return self._generate_fallback_variants(question, original_sql, original_evidence, num_variants)
+
+    def _generate_with_model(self, prompt: str, num_variants: int) -> List[Dict[str, str]]:
+        """
+        Generiert SQL-Varianten mit dem trainierten Modell.
+        """
+        # Nachricht im Chat-Format
+        messages = [
+            {"role": "system", "content": self.system_prompt},
+            {"role": "user", "content": prompt}
+        ]
+
+        # Text für das Modell formatieren (Qwen Chat Format)
+        text = self.tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True
+        )
+
+        # Tokenisieren
+        inputs = self.tokenizer([text], return_tensors="pt").to(self.device)
+
+        # Generieren
+        print(f"    🤖 Generiere Antworten...", end=" ", flush=True)
+
+        with torch.no_grad():
+            outputs = self.model.generate(
+                **inputs,
+                max_new_tokens=2048,
+                temperature=self.temperature,
+                do_sample=True,
+                top_p=0.95,
+                pad_token_id=self.tokenizer.pad_token_id,
+                eos_token_id=self.tokenizer.eos_token_id
+            )
+
+        # Dekodieren
+        generated_text = self.tokenizer.decode(outputs[0], skip_special_tokens=False)
+
+        # Extrahiere nur den generierten Teil (nach dem Prompt)
+        response = generated_text[len(text):].strip()
+
+        print(f"✅", flush=True)
+
+        # Versuche JSON zu parsen
+        try:
+            # Suche nach JSON in der Antwort
+            start = response.find('{')
+            end = response.rfind('}') + 1
+            if start >= 0 and end > start:
+                json_str = response[start:end]
+                result = json.loads(json_str)
+                candidates = result.get('candidates', [])
+                print(f"    ✅ {len(candidates)} Kandidaten erhalten")
+                return candidates[:num_variants]
+            else:
+                print(f"    ⚠️ Kein JSON in der Antwort gefunden")
+                print(f"    Antwort: {response[:200]}...")
+        except json.JSONDecodeError as e:
+            print(f"    ⚠️ JSON-Parsing Fehler: {e}")
+            print(f"    Antwort: {response[:200]}...")
+
+        return []
+
+    def _generate_fallback_variants(self, question, original_sql, original_evidence, num_variants):
+        """
+        Generiert einfache Fallback-Varianten (falls Modell fehlschlägt).
+        """
+        variants = []
+        techniques = [
+            {
+                "name": "Original Query",
+                "evidence": original_evidence,
+                "sql": original_sql
+            },
+            {
+                "name": "JOIN Variation",
+                "evidence": "Chain-of-Thought: Using INNER JOIN to combine all necessary tables.",
+                "sql": original_sql
+            },
+            {
+                "name": "Subquery Approach",
+                "evidence": "Chain-of-Thought: Using subqueries to filter data step by step.",
+                "sql": original_sql
+            }
+        ]
+
+        for i in range(min(num_variants, len(techniques))):
+            tech = techniques[i]
+            variants.append({
+                "evidence": tech["evidence"],
+                "SQL": tech["sql"]
+            })
+
+        # Wiederholen falls nötig
+        while len(variants) < num_variants:
+            variants.extend(variants[:num_variants - len(variants)])
+
+        return variants[:num_variants]
+
+    def _build_prompt(self, question, original_sql, original_evidence, num_variants):
+        """Baut den Prompt für das LLM"""
+        return f"""Generate {num_variants} different SQL queries for this question:
+
+Question: "{question}"
+
+Original SQL example: {original_sql}
+
+Return a JSON object with a 'candidates' array containing {num_variants} objects.
+Each object must have:
+- "evidence": detailed chain of thought explanation
+- "SQL": the SQL query
+
+Example format:
+{{
+  "candidates": [
+    {{
+      "evidence": "First, we need to find all zip codes in the county...",
+      "SQL": "SELECT z.households FROM zip_data z JOIN country c ON z.zip_code = c.zip_code WHERE c.county = 'ARECIBO'"
+    }}
+  ]
+}}
+
+Generate {num_variants} different approaches now:"""
+
+    def batch_generate(self, questions_data, candidates_per_question=10, delay=1.0):
+        """Batch-Generierung für mehrere Fragen"""
+        all_candidates = []
+
+        for idx, item in enumerate(questions_data, 1):
+            query_id = item.get('query_id', idx)
+            question_text = item.get('question', '')[:80]
+            print(f"\n  [{idx}/{len(questions_data)}] Frage {query_id}: {question_text}...")
+
+            variants = self.generate_sql_variants(
+                question=item.get('question', ''),
+                original_sql=item.get('SQL', ''),
+                original_evidence=item.get('evidence', ''),
+                num_variants=candidates_per_question
+            )
+
+            # Kandidaten zur Liste hinzufügen
+            for i, variant in enumerate(variants[:candidates_per_question]):
+                candidate = {
+                    "candidate_id": f"{query_id}.{i+1}",  # Temporäre ID, wird später überschrieben
+                    "db_id": "address",
+                    "question": item.get('question', ''),
+                    "query_id": query_id,
+                    "evidence": variant.get('evidence', item.get('evidence', '')),
+                    "SQL": variant.get('SQL', item.get('SQL', ''))
+                }
+                all_candidates.append(candidate)
+
+            print(f"    ✅ {len(variants)} Kandidaten generiert")
+
+            # Kurze Pause zwischen den Anfragen (für CPU/GPU)
+            if delay > 0:
+                time.sleep(delay)
+
+        return all_candidates
+
+
+# Test-Funktion
+if __name__ == "__main__":
+    print("Teste TrainedLLMManager...")
+    model_path = "/home/akuzg/dmml/axolotl/second_round/trained_model"
+
+    try:
+        llm = TrainedLLMManager(model_path, temperature=0.7)
+        print("✅ TrainedLLMManager erfolgreich initialisiert!")
+
+        # Test-Generierung
+        test_question = {
+            'question': 'How many households are in ARECIBO?',
+            'SQL': 'SELECT SUM(households) FROM zip_data JOIN country ON zip_data.zip_code = country.zip_code WHERE county = "ARECIBO"',
+            'evidence': 'Join zip_data with country on zip_code and filter by county'
+        }
+
+        print("\n🧪 Teste Generierung...")
+        variants = llm.generate_sql_variants(
+            question=test_question['question'],
+            original_sql=test_question['SQL'],
+            original_evidence=test_question['evidence'],
+            num_variants=2
+        )
+
+        print(f"✅ Generiert: {len(variants)} Varianten")
+        for i, v in enumerate(variants, 1):
+            print(f"\nVariant {i}:")
+            print(f"  Evidence: {v['evidence'][:100]}...")
+            print(f"  SQL: {v['SQL'][:100]}...")
+
+    except Exception as e:
+        print(f"❌ Fehler: {e}")

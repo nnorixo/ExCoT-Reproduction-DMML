@@ -5,7 +5,7 @@
 VOLLSTÄNDIGE PIPELINE - Alle drei Schritte in einem Skript:
 
 1. Extrahiert SQL-Abfragen aus train_gold.sql und führt sie auf address.sqlite aus
-2. Fügt query_ids zu den Fragen hinzu (überspringt address_from_OG_with_ids.json)
+2. Fügt query_ids zu den Fragen hinzu
 3. Generiert Kandidaten mit lokalem Qwen2.5 via Ollama
 4. Fügt candidate_ids im Format "X.YY" hinzu (z.B. 1.01, 1.02)
 """

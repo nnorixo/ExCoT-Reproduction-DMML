@@ -41,8 +41,8 @@ class LLMManager:
                 data = response.json()
                 models = data.get('models', [])
                 model_names = [m['name'] for m in models]
-                print(f"✅ Ollama ist erreichbar!")
-                print(f"📋 Verfügbare Modelle: {model_names}")
+                print(f"Ollama ist erreichbar!")
+                print(f"Verfügbare Modelle: {model_names}")
                 
                 # Prüfe ob unser Modell da ist
                 model_found = False
@@ -50,23 +50,23 @@ class LLMManager:
                     if self.model_name in m:
                         self.model_name = m
                         model_found = True
-                        print(f"✅ Verwende Modell: '{self.model_name}'")
+                        print(f"Verwende Modell: '{self.model_name}'")
                         break
                 
                 if not model_found:
-                    print(f"⚠️ Modell '{self.model_name}' nicht gefunden!")
+                    print(f"Modell '{self.model_name}' nicht gefunden!")
                     print(f"Installieren mit: ollama pull {self.model_name}")
                     raise ValueError(f"Modell {self.model_name} nicht verfügbar")
                 
                 return True
             else:
-                print(f"❌ HTTP-Fehler: {response.status_code}")
+                print(f"HTTP-Fehler: {response.status_code}")
                 
         except requests.exceptions.ConnectionError:
-            print("❌ Keine Verbindung zu Ollama möglich!")
+            print("Keine Verbindung zu Ollama möglich!")
             print("Stellen Sie sicher, dass Ollama läuft: 'ollama serve'")
         except Exception as e:
-            print(f"❌ Fehler: {e}")
+            print(f"Fehler: {e}")
         
         raise ConnectionError("Keine Verbindung zu Ollama möglich")
     
@@ -98,7 +98,7 @@ Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
         try:
             return self._call_ollama_http(prompt, num_variants)
         except Exception as e:
-            print(f"⚠️ HTTP-Fehler: {e}")
+            print(f"HTTP-Fehler: {e}")
             return self._generate_fallback_variants(question, original_sql, original_evidence, num_variants)
     
     def _call_ollama_http(self, prompt: str, num_variants: int) -> List[Dict[str, str]]:
@@ -118,7 +118,7 @@ Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
             }
         }
         
-        print(f"    📤 Sende Anfrage an {self.model_name}...")
+        print(f"Sende Anfrage an {self.model_name}...")
         response = requests.post(
             f"{self.ollama_url}/chat",
             json=payload,
@@ -140,10 +140,10 @@ Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
                 json_str = content[start:end]
                 result = json.loads(json_str)
                 candidates = result.get('candidates', [])
-                print(f"    ✅ {len(candidates)} Kandidaten erhalten")
+                print(f"    {len(candidates)} Kandidaten erhalten")
                 return candidates[:num_variants]
         except Exception as e:
-            print(f"    ⚠️ JSON-Parsing Fehler: {e}")
+            print(f"    ⚠JSON-Parsing Fehler: {e}")
             print(f"    Antwort: {content[:200]}...")
         
         return []
@@ -235,7 +235,7 @@ Generate {num_variants} different approaches now:"""
                 }
                 all_candidates.append(candidate)
             
-            print(f"    ✅ {len(variants)} Kandidaten generiert")
+            print(f"    {len(variants)} Kandidaten generiert")
             time.sleep(delay)
         
         return all_candidates
@@ -246,6 +246,6 @@ if __name__ == "__main__":
     print("Teste LLMManager...")
     try:
         llm = LLMManager("qwen2.5")
-        print("✅ LLMManager erfolgreich initialisiert!")
+        print("LLMManager erfolgreich initialisiert!")
     except Exception as e:
-        print(f"❌ Fehler: {e}")
+        print(f"Fehler: {e}")

@@ -31,7 +31,7 @@ class TrainedLLMManager:
         self.device = device if torch.cuda.is_available() else "cpu"
 
         if device == "cuda" and not torch.cuda.is_available():
-            print("⚠️ CUDA nicht verfügbar, verwende CPU (sehr langsam für 7B-Modell!)")
+            print("CUDA nicht verfügbar, verwende CPU (sehr langsam für 7B-Modell!)")
             self.device = "cpu"
 
         self.system_prompt = self._get_system_prompt()
@@ -43,12 +43,12 @@ class TrainedLLMManager:
         """
         Lädt das trainierte Modell und den Tokenizer.
         """
-        print(f"🔧 Lade trainiertes Modell von {self.model_path}...")
+        print(f"Lade trainiertes Modell von {self.model_path}...")
         print(f"   Device: {self.device}")
 
         try:
             # Tokenizer laden
-            print("   📝 Lade Tokenizer...")
+            print("Lade Tokenizer...")
             self.tokenizer = AutoTokenizer.from_pretrained(
                 self.model_path,
                 trust_remote_code=True
@@ -59,7 +59,7 @@ class TrainedLLMManager:
                 self.tokenizer.pad_token = self.tokenizer.eos_token
 
             # Modell laden
-            print("   🤖 Lade Modell (das kann 1-2 Minuten dauern)...")
+            print("Lade Modell (das kann 1-2 Minuten dauern)...")
             self.model = AutoModelForCausalLM.from_pretrained(
                 self.model_path,
                 torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
@@ -70,7 +70,7 @@ class TrainedLLMManager:
             if self.device == "cpu":
                 self.model = self.model.to(self.device)
 
-            print("✅ Modell erfolgreich geladen!")
+            print("Modell erfolgreich geladen!")
 
             # Modellgröße anzeigen
             if self.device == "cuda":
@@ -78,7 +78,7 @@ class TrainedLLMManager:
                 print(f"   GPU Speicher verwendet: {mem_allocated:.2f} GB")
 
         except Exception as e:
-            print(f"❌ Fehler beim Laden des Modells: {e}")
+            print(f"Fehler beim Laden des Modells: {e}")
             raise
 
     def _get_system_prompt(self) -> str:
@@ -108,7 +108,7 @@ Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
         try:
             return self._generate_with_model(prompt, num_variants)
         except Exception as e:
-            print(f"⚠️ Fehler bei der Generierung: {e}")
+            print(f"Fehler bei der Generierung: {e}")
             return self._generate_fallback_variants(question, original_sql, original_evidence, num_variants)
 
     def _generate_with_model(self, prompt: str, num_variants: int) -> List[Dict[str, str]]:
@@ -132,7 +132,7 @@ Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
         inputs = self.tokenizer([text], return_tensors="pt").to(self.device)
 
         # Generieren
-        print(f"    🤖 Generiere Antworten...", end=" ", flush=True)
+        print(f"Generiere Antworten...", end=" ", flush=True)
 
         with torch.no_grad():
             outputs = self.model.generate(
@@ -151,7 +151,7 @@ Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
         # Extrahiere nur den generierten Teil (nach dem Prompt)
         response = generated_text[len(text):].strip()
 
-        print(f"✅", flush=True)
+        print(f"ok.", flush=True)
 
         # Versuche JSON zu parsen
         try:
@@ -162,13 +162,13 @@ Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
                 json_str = response[start:end]
                 result = json.loads(json_str)
                 candidates = result.get('candidates', [])
-                print(f"    ✅ {len(candidates)} Kandidaten erhalten")
+                print(f"  ok. {len(candidates)} Kandidaten erhalten")
                 return candidates[:num_variants]
             else:
-                print(f"    ⚠️ Kein JSON in der Antwort gefunden")
+                print(f"    Kein JSON in der Antwort gefunden")
                 print(f"    Antwort: {response[:200]}...")
         except json.JSONDecodeError as e:
-            print(f"    ⚠️ JSON-Parsing Fehler: {e}")
+            print(f"    JSON-Parsing Fehler: {e}")
             print(f"    Antwort: {response[:200]}...")
 
         return []
@@ -262,7 +262,7 @@ Generate {num_variants} different approaches now:"""
                 }
                 all_candidates.append(candidate)
 
-            print(f"    ✅ {len(variants)} Kandidaten generiert")
+            print(f"   {len(variants)} Kandidaten generiert")
 
             # Kurze Pause zwischen den Anfragen (für CPU/GPU)
             if delay > 0:
@@ -278,7 +278,7 @@ if __name__ == "__main__":
 
     try:
         llm = TrainedLLMManager(model_path, temperature=0.7)
-        print("✅ TrainedLLMManager erfolgreich initialisiert!")
+        print("TrainedLLMManager erfolgreich initialisiert!")
 
         # Test-Generierung
         test_question = {
@@ -287,7 +287,7 @@ if __name__ == "__main__":
             'evidence': 'Join zip_data with country on zip_code and filter by county'
         }
 
-        print("\n🧪 Teste Generierung...")
+        print("\n Teste Generierung...")
         variants = llm.generate_sql_variants(
             question=test_question['question'],
             original_sql=test_question['SQL'],
@@ -295,11 +295,11 @@ if __name__ == "__main__":
             num_variants=2
         )
 
-        print(f"✅ Generiert: {len(variants)} Varianten")
+        print(f"Generiert: {len(variants)} Varianten")
         for i, v in enumerate(variants, 1):
             print(f"\nVariant {i}:")
             print(f"  Evidence: {v['evidence'][:100]}...")
             print(f"  SQL: {v['SQL'][:100]}...")
 
     except Exception as e:
-        print(f"❌ Fehler: {e}")
+        print(f"Fehler: {e}")

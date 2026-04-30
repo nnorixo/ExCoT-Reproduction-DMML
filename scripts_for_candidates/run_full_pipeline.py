@@ -1,3 +1,5 @@
+### Erstellt die ersten Kandidaten aus der DB Adress ###
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
@@ -168,25 +170,25 @@ def run_sql_extraction():
 
     # Prüfen ob Dateien existieren
     if not os.path.exists(DB_PATH):
-        print(f"❌ Datenbank nicht gefunden: {DB_PATH}")
+        print(f"Datenbank nicht gefunden: {DB_PATH}")
         return None
 
     if not os.path.exists(SQL_FILE_PATH):
-        print(f"❌ SQL-Datei nicht gefunden: {SQL_FILE_PATH}")
+        print(f"SQL-Datei nicht gefunden: {SQL_FILE_PATH}")
         return None
 
     # Queries extrahieren
-    print(f"\n📄 Extrahiere Queries von Zeile {START_LINE} bis {END_LINE}...")
+    print(f"\nExtrahiere Queries von Zeile {START_LINE} bis {END_LINE}...")
     queries = extract_queries_from_file(SQL_FILE_PATH, START_LINE, END_LINE)
 
     if not queries:
-        print("❌ Keine Queries gefunden.")
+        print("Keine Queries gefunden.")
         return None
 
-    print(f"✅ {len(queries)} Queries gefunden.")
+    print(f"{len(queries)} Queries gefunden.")
 
     # Queries ausführen
-    print(f"\n🚀 Führe {len(queries)} Queries aus...")
+    print(f"\nFühre {len(queries)} Queries aus...")
     results = []
 
     for i, query_info in enumerate(queries, 1):
@@ -200,15 +202,15 @@ def run_sql_extraction():
         results.append(result)
 
         if result['success']:
-            print(f"✅ {result['row_count']} Zeilen")
+            print(f"{result['row_count']} Zeilen")
         else:
-            print(f"❌ {result['error'][:50]}")
+            print(f"{result['error'][:50]}")
 
     # Ergebnisse speichern
-    print(f"\n💾 Speichere Ergebnisse...")
+    print(f"\nSpeichere Ergebnisse...")
     output_file, summary = save_results_to_file(results, GOLD_QUERIES_DIR)
 
-    print(f"\n✅ Schritt 1 abgeschlossen!")
+    print(f"\nSchritt 1 abgeschlossen!")
     print(f"   Erfolgreich: {summary['successful']}/{summary['failed']+summary['successful']}")
     print(f"   Ergebnisdatei: {output_file}")
 
@@ -296,36 +298,36 @@ def run_query_id_assignment(results_file):
     print("=" * 70)
 
     # Ergebnisse aus Schritt 1 laden
-    print(f"\n📂 Lade Ergebnisdatei: {os.path.basename(results_file)}")
+    print(f"\nLade Ergebnisdatei: {os.path.basename(results_file)}")
     results_queries = load_results_file(results_file)
 
     if not results_queries:
-        print("❌ Keine Queries gefunden.")
+        print("Keine Queries gefunden.")
         return None, None
 
     # Fragen-Datei finden
     questions_file = find_input_questions()
 
     if not questions_file:
-        print(f"❌ Keine Fragen-JSON-Dateien gefunden in: {QUESTIONS_DIR}")
+        print(f"Keine Fragen-JSON-Dateien gefunden in: {QUESTIONS_DIR}")
         return None, None
 
-    print(f"\n✅ Verwende Fragen-Datei: {os.path.basename(questions_file)}")
+    print(f"\nVerwende Fragen-Datei: {os.path.basename(questions_file)}")
 
     # Fragen laden
-    print(f"\n📚 Lade Fragen...")
+    print(f"\nLade Fragen...")
     questions = load_questions(questions_file, NUM_QUESTIONS)
-    print(f"✅ {len(questions)} Fragen geladen")
+    print(f"{len(questions)} Fragen geladen")
 
     # Query IDs hinzufügen
-    print(f"\n🔍 Füge Query IDs hinzu...")
+    print(f"\nFüge Query IDs hinzu...")
     questions_with_ids, matched = add_query_ids_to_questions(questions, results_queries)
-    print(f"✅ {matched}/{len(questions)} Fragen zugeordnet ({matched/len(questions)*100:.1f}%)")
+    print(f"{matched}/{len(questions)} Fragen zugeordnet ({matched/len(questions)*100:.1f}%)")
 
     # Prüfen ob alle Fragen eine query_id haben
     missing_ids = [i for i, q in enumerate(questions_with_ids) if 'query_id' not in q]
     if missing_ids:
-        print(f"\n⚠️ Warnung: {len(missing_ids)} Fragen haben keine query_id:")
+        print(f"\nWarnung: {len(missing_ids)} Fragen haben keine query_id:")
         for i in missing_ids[:5]:
             print(f"   - Frage {i+1}: {questions_with_ids[i].get('question', 'Keine Frage')[:50]}...")
 
@@ -356,7 +358,7 @@ def run_candidate_generation(questions_with_ids, questions_file):
     try:
         llm = LLMManager(model_name="qwen2.5", temperature=0.8)
     except Exception as e:
-        print(f"❌ Fehler: {e}")
+        print(f"Fehler: {e}")
         print("\nBitte führen Sie zuerst aus:")
         print("1. ollama serve (in einem separaten Terminal)")
         print("2. ollama pull qwen2.5")
@@ -364,7 +366,7 @@ def run_candidate_generation(questions_with_ids, questions_file):
 
     # Kandidaten generieren
     total_candidates = len(questions_with_ids) * CANDIDATES_PER_QUESTION
-    print(f"\n🚀 Starte Generierung von {total_candidates} Kandidaten...")
+    print(f"\nStarte Generierung von {total_candidates} Kandidaten...")
 
     all_candidates = llm.batch_generate(
         questions_with_ids,
@@ -373,7 +375,7 @@ def run_candidate_generation(questions_with_ids, questions_file):
     )
 
     # Candidate IDs im Format "X.YY" hinzufügen
-    print(f"\n🏷️ Füge Candidate IDs hinzu (Format: X.YY)...")
+    print(f"\nFüge Candidate IDs hinzu (Format: X.YY)...")
     current_idx = 0
     for q_idx, question in enumerate(questions_with_ids, 1):
         query_id = question.get('query_id', q_idx)
@@ -382,7 +384,7 @@ def run_candidate_generation(questions_with_ids, questions_file):
         current_idx += CANDIDATES_PER_QUESTION
 
     # Ergebnisse speichern
-    print(f"\n💾 Speichere {len(all_candidates)} Kandidaten...")
+    print(f"\nSpeichere {len(all_candidates)} Kandidaten...")
 
     output_data = {
         "candidates": all_candidates
@@ -403,20 +405,20 @@ def main():
     print("=" * 70)
     print("VOLLSTÄNDIGE PIPELINE - Alle drei Schritte")
     print("=" * 70)
-    print(f"\n📁 Arbeitsverzeichnis: {BASE_DIR}")
-    print(f"📊 Verarbeite {NUM_QUESTIONS} Fragen mit {CANDIDATES_PER_QUESTION} Kandidaten pro Frage")
-    print(f"📁 Ausgabedatei: {OUTPUT_FILE}")
+    print(f"\nArbeitsverzeichnis: {BASE_DIR}")
+    print(f"Verarbeite {NUM_QUESTIONS} Fragen mit {CANDIDATES_PER_QUESTION} Kandidaten pro Frage")
+    print(f"Ausgabedatei: {OUTPUT_FILE}")
 
     # Schritt 1: SQL Extraktion und Ausführung
     results_file = run_sql_extraction()
     if not results_file:
-        print("\n❌ Pipeline abgebrochen bei Schritt 1.")
+        print("\nPipeline abgebrochen bei Schritt 1.")
         return
 
     # Schritt 2: Query IDs zu Fragen hinzufügen
     questions_with_ids, questions_file = run_query_id_assignment(results_file)
     if not questions_with_ids:
-        print("\n❌ Pipeline abgebrochen bei Schritt 2.")
+        print("\nPipeline abgebrochen bei Schritt 2.")
         return
 
     # Schritt 3: Kandidaten generieren
@@ -425,15 +427,15 @@ def main():
     # Abschluss
     print("\n" + "=" * 70)
     if success:
-        print("✅ PIPELINE VOLLSTÄNDIG ABGESCHLOSSEN!")
+        print("PIPELINE VOLLSTÄNDIG ABGESCHLOSSEN!")
         print("=" * 70)
-        print(f"\n📊 Zusammenfassung:")
+        print(f"\nZusammenfassung:")
         print(f"   Schritt 1: SQL Ergebnisse gespeichert in {GOLD_QUERIES_DIR}")
         print(f"   Schritt 2: {len(questions_with_ids)} Fragen mit Query IDs versehen")
         print(f"   Schritt 3: {len(questions_with_ids) * CANDIDATES_PER_QUESTION} Kandidaten generiert")
-        print(f"\n📁 Endgültige Ausgabedatei: {OUTPUT_FILE}")
+        print(f"\nEndgültige Ausgabedatei: {OUTPUT_FILE}")
     else:
-        print("❌ PIPELINE ABGEBROCHEN - Schritt 3 fehlgeschlagen")
+        print("PIPELINE ABGEBROCHEN - Schritt 3 fehlgeschlagen")
     print("=" * 70)
 
 if __name__ == "__main__":

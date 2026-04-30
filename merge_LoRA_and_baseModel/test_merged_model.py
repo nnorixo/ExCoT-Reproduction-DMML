@@ -1,7 +1,8 @@
-# test_merged_model.py
+### Nur zum Testen. ###
+
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-model_path = "/pfad/zum/gemergeten/modell"
+model_path = "/pfad"     # angepasst, da wo das trainerte Model liegt.
 
 print(f"Loading merged model from {model_path}...")
 model = AutoModelForCausalLM.from_pretrained(

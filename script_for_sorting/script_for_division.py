@@ -25,7 +25,7 @@ def load_gold_standard(gold_file_path, target_db=None):
                             'db': db_name
                         })
                 else:
-                    # Fallback: Durch Leerzeichen trennen (wie ursprünglich angenommen)
+                    # Fallback: Durch Leerzeichen trennen
                     parts = line.rsplit(' ', 1)
                     if len(parts) == 2:
                         sql_query, db_name = parts
@@ -116,7 +116,6 @@ def evaluate_candidates(json_file_path, db_dir_path, gold_file_path, output_file
     
     print(f"Gefundene Fragegruppen: {len(question_groups)}")
     
-    # Stelle sicher, dass wir genug Gold-Queries haben
     if len(question_groups) != len(gold_queries):
         print(f"WARNUNG: Anzahl der Fragen ({len(question_groups)}) stimmt nicht mit Gold-Standard ({len(gold_queries)}) überein!")
         print("Verwende die kleinere Anzahl für den Vergleich.")
@@ -126,13 +125,13 @@ def evaluate_candidates(json_file_path, db_dir_path, gold_file_path, output_file
     
     results = []
     
-    # Bewerte jede Gruppe
+    # Bewertet jede Gruppe
     for idx, group in enumerate(question_groups):
         gold_query = gold_queries[idx]
         
         print(f"\nVerarbeite Frage {idx + 1}: {group[0]['question'][:50]}...")
         
-        # Führe Gold-Query aus
+        # Führt Gold-Query aus
         gold_result = execute_query(db_path, gold_query['sql'])
         
         if gold_result is None:
@@ -149,7 +148,7 @@ def evaluate_candidates(json_file_path, db_dir_path, gold_file_path, output_file
         
         print(f"  Gold-Result: {gold_result[:3] if len(gold_result) > 3 else gold_result}...")
         
-        # Bewerte jeden Kandidaten in der Gruppe
+        # Bewertet jeden Kandidaten in der Gruppe
         for candidate in group:
             candidate_result = execute_query(db_path, candidate['SQL'])
             is_correct = compare_results(gold_result, candidate_result)
@@ -157,13 +156,13 @@ def evaluate_candidates(json_file_path, db_dir_path, gold_file_path, output_file
             results.append({
                 'candidate_id': candidate['candidate_id'],
                 'db_id': candidate['db_id'],
-                'question': candidate['question'][:100],  # Kürzen für bessere Lesbarkeit
+                'question': candidate['question'][:100],
                 'correct': is_correct
             })
             
             print(f"    Kandidat {candidate['candidate_id']}: {'✓ Korrekt' if is_correct else '✗ Falsch'}")
     
-    # Speichere Ergebnisse
+    # Speichert Ergebnisse
     output_data = []
     for result in results:
         output_data.append({
@@ -195,7 +194,7 @@ def main():
     
     args = parser.parse_args()
     
-    # Prüfe, ob Dateien existieren
+    # Prüft, ob Dateien existieren
     if not os.path.exists(args.json_file):
         print(f"Fehler: JSON-Datei nicht gefunden: {args.json_file}")
         return
@@ -208,7 +207,7 @@ def main():
         print(f"Fehler: Datenbankverzeichnis nicht gefunden: {args.db_dir}")
         return
     
-    # Führe Bewertung durch
+    # Führt Bewertung durch
     evaluate_candidates(args.json_file, args.db_dir, args.gold_file, args.output)
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
+### Dokument wurde am Ende nicht verwendet, da wir die config mit einem Python-Skript erstellt haben. ###
+
 # Basis-Modell
 base_model: Qwen/Qwen2.5-7B-Instruct
 model_type: AutoModelForCausalLM

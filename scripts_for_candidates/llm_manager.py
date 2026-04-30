@@ -33,7 +33,7 @@ class LLMManager:
         """
         Prüft die Verbindung zu Ollama.
         """
-        print("🔍 Prüfe Ollama Verbindung...")
+        print("Prüfe Ollama Verbindung...")
         
         try:
             response = requests.get(f"{self.ollama_url}/tags", timeout=5)
@@ -143,7 +143,7 @@ Each candidate must have 'evidence' (Chain-of-Thought) and 'SQL' fields."""
                 print(f"    {len(candidates)} Kandidaten erhalten")
                 return candidates[:num_variants]
         except Exception as e:
-            print(f"    ⚠JSON-Parsing Fehler: {e}")
+            print(f"    JSON-Parsing Fehler: {e}")
             print(f"    Antwort: {content[:200]}...")
         
         return []

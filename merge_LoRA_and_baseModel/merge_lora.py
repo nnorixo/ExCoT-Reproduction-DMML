@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 Merge a LoRA adapter with a base model into a single complete model.
 """
@@ -39,7 +39,7 @@ def merge_lora_model(
     merged_model.save_pretrained(output_path)
     tokenizer.save_pretrained(output_path)
     
-    print(f"✓ Merged model successfully saved to {output_path}")
+    print(f"Merged model successfully saved to {output_path}")
     print(f"  - Model files: {output_path}")
     print(f"  - Tokenizer files: {output_path}")
 

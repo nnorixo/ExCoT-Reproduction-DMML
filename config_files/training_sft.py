@@ -54,7 +54,7 @@ training_args = SFTConfig(
     output_dir="./qwen-sft-sql",
     per_device_train_batch_size=1,
     gradient_accumulation_steps=4,
-    learning_rate=1e-4,  # 🔥 higher LR for LoRA
+    learning_rate=1e-4, 
     num_train_epochs=3,
     logging_steps=10,
     save_strategy="epoch",
@@ -72,8 +72,8 @@ trainer = SFTTrainer(
     model=model,
     args=training_args,
     train_dataset=dataset,
-    processing_class=tokenizer,   #new API (like DPO fix)
-    peft_config=peft_config,      # optional (you already wrapped, but OK)
+    processing_class=tokenizer,  
+    peft_config=peft_config,     
 )
 
 # =========================

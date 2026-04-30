@@ -83,7 +83,7 @@ def create_dpo_pairs(
                 }
                 dpo_dataset.append(dpo_entry)
 
-    # Speichere Ergebnis
+    # Ergebnisse speichern
     save_json(dpo_dataset, output_file)
     print(f"Erstellt: {len(dpo_dataset)} DPO-Paare für {db_name}")
     print(f"Gespeichert in: {output_file}")
@@ -113,24 +113,21 @@ def process_all_datasets(
         else:
             print(f"Warnung: Dateien für {db_name} nicht gefunden")
 
-# Beispiel-Nutzung
 if __name__ == "__main__":
     # Konfiguration
-    DATA_DIR = "./data"  # Ihr Verzeichnis mit den JSON-Dateien
+    DATA_DIR = "./data"  # Verzeichnis mit den JSON-Dateien
     OUTPUT_DIR = "./dpo_datasets"
 
-    # Definieren Sie alle Ihre Dateipaare
+    # Definiert alle Dateipaare
     file_pairs = [
         ("./../candidates/address.json", "./../candidates_sorted/address_sorted.json", "address"),
         ("./../candidates/citeseer.json", "./../candidates_sorted/citeseer_sorted.json", "citeseer"),
         ("./../candidates/craftbeer.json", "./../candidates_sorted/craftbeer_sorted.json", "craftbeer"),
         ("./../candidates/disney.json", "./../candidates_sorted/disney_sorted.json", "disney"),
         ("./../candidates/restaurant.json", "./../candidates_sorted/restaurant_sorted.json", "restaurant"),
-        # Fügen Sie hier weitere Paare hinzu
-        # ("customers.json", "customers_sorted.json", "customers"),
     ]
 
-    # Führen Sie die Konvertierung durch
+    # Konvertierung
     process_all_datasets(DATA_DIR, OUTPUT_DIR, file_pairs)
 
     # Optional: Alle Datasets zu einem großen zusammenführen

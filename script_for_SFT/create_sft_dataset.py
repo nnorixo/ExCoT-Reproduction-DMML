@@ -97,15 +97,15 @@ def main():
         # Speichere als JSON
         dataset.to_json(output_file)
 
-        print(f"\n✅ Dataset saved to {output_file}")
+        print(f"\n Dataset saved to {output_file}")
         print(f"Total training examples: {len(dataset)}")
 
         # Zeige ein Beispiel
         if len(dataset) > 0:
-            print("\n📝 Example training entry:")
+            print("\n Example training entry:")
             print(json.dumps(dataset[0], indent=2, ensure_ascii=False))
     else:
-        print("\n❌ No correct candidates found. Dataset not created.")
+        print("\n No correct candidates found. Dataset not created.")
 
 if __name__ == "__main__":
     main()

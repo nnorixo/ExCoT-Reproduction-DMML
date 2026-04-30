@@ -1,5 +1,6 @@
+### ANderes Model ausprobiert. War für Axolotl gedacht. Axolotl lief auf dem Server der Uni nicht. ###
+
 base_model: meta-llama/Meta-Llama-3-8B-Instruct
-# optionally might have model_type or tokenizer_type
 model_type: LlamaForCausalLM
 tokenizer_type: AutoTokenizer
 # Automatically upload checkpoint and final model to HF
@@ -74,5 +75,3 @@ warmup_ratio: 0.1
 evals_per_epoch: 4
 saves_per_epoch: 1
 weight_decay: 0.0
-
-# save_first_step: true  # uncomment this to validate checkpoint saving works with our config

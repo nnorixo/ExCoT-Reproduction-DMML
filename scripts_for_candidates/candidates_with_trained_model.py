@@ -26,7 +26,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 BASE_DIR = "/home/akuzg/dmml/axolotl"
 MODEL_PATH = "./trained_model"
 TEMPERATURE = 0.8
-MAX_LENGTH = 2048
+MAX_LENGTH = 1024
 CANDIDATES_PER_QUESTION = 10
 MAX_QUESTIONS = 20
 
@@ -118,6 +118,7 @@ class CoTLLMManager:
         self.db_schema = db_schema
         self.temperature = temperature
         self.device = "cpu"
+        self.max_new_tokens = 256
         
         # Modell laden
         self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
@@ -148,12 +149,12 @@ class CoTLLMManager:
         
         # Generieren
         inputs = self.tokenizer(prompt, return_tensors="pt", truncation=True, 
-                                max_length=MAX_LENGTH - 500).to(self.device)
+                                max_length=MAX_LENGTH - self.max_new_tokens).to(self.device)
         
         with torch.no_grad():
             outputs = self.model.generate(
                 **inputs,
-                max_new_tokens=MAX_LENGTH,
+                max_new_tokens=self.max_new_tokens,
                 temperature=temp,
                 do_sample=True,
                 top_p=0.95,

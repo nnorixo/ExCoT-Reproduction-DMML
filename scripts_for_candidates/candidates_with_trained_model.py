@@ -26,9 +26,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 BASE_DIR = "/home/akuzg/dmml/axolotl"
 MODEL_PATH = "./trained_model"
 TEMPERATURE = 0.8
-MAX_LENGTH = 1024
-CANDIDATES_PER_QUESTION = 10
-MAX_QUESTIONS = 20
+MAX_LENGTH = 512
+CANDIDATES_PER_QUESTION = 5
+MAX_QUESTIONS = 5
 
 # ============================================================
 # SCHEMA EXTRAKTION AUS TRAIN_TABLES.SQL

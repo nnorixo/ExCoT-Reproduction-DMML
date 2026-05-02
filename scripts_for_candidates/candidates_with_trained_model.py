@@ -248,10 +248,6 @@ Analysis: Let me break down this question into smaller sub-problems.
                     "SQL": variant.get("SQL", "")
                 }
                 all_candidates.append(candidate)
-            
-            # Pause zwischen Fragen
-            if idx < len(questions):
-                time.sleep(0.5)
         
         return all_candidates
 

@@ -201,12 +201,17 @@ Analysis: Let me break down this question into smaller sub-problems.
         # Suche nach SQL in ```sql ... ``` Bloecken
         sql_match = re.search(r'```sql\s*(.*?)\s*```', response, re.DOTALL | re.IGNORECASE)
         if sql_match:
-            return sql_match.group(1).strip()
+            sql = sql_match.group(1).strip()
+            # Entferne alle Zeilenumbrueche und ersetze mit Leerzeichen
+            sql = ' '.join(sql.split())
+            return sql
         
         # Fallback: Suche nach SELECT statement
         select_match = re.search(r'(SELECT.*?)(?=\n\n|\Z)', response, re.DOTALL | re.IGNORECASE)
         if select_match:
-            return select_match.group(1).strip()
+            sql = select_match.group(1).strip()
+            sql = ' '.join(sql.split())
+            return sql
         
         return "SELECT * FROM zip_data LIMIT 1"  # Fallback
     

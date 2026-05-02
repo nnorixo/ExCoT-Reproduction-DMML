@@ -2,15 +2,16 @@
 # -*- coding: utf-8 -*-
 
 """
-EINFACHE PIPELINE fuer trainiertes Modell auf Linux-Server (CPU only)
-- Nur Kandidatengenerierung aus Text-Fragen
-- Verwendet Chain-of-Thought Prompting mit Divide and Conquer
-- Keine Verwendung von train_gold.sql
+PIPELINE fuer trainiertes Modell mit BIRD-Datenbanken
+- Datenbank-Name als Kommandozeilen-Argument
+- Verwendet train_tables.sql fuer Schema
+- Verwendet train.json fuer Fragen
+- Generiert 10 Kandidaten pro Frage (max. 20 Fragen pro DB)
 """
 
 import json
 import os
-import glob
+import sys
 import time
 from pathlib import Path
 from datetime import datetime
@@ -23,14 +24,86 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 # ============================================================
 
 BASE_DIR = "/home/akuzg/dmml/axolotl/second_round"
-QUESTIONS_DIR = os.path.join(BASE_DIR, "data/BIRD/train/train/Address Table Candidates")
-OUTPUT_FILE = os.path.join(BASE_DIR, "address_candidates_cot.json")
 MODEL_PATH = "./trained_model"
-
-NUM_QUESTIONS = 20
-CANDIDATES_PER_QUESTION = 10
 TEMPERATURE = 0.8
 MAX_LENGTH = 2048
+CANDIDATES_PER_QUESTION = 10
+MAX_QUESTIONS = 20
+
+# ============================================================
+# SCHEMA EXTRAKTION AUS TRAIN_TABLES.SQL
+# ============================================================
+
+def load_schema_from_bird(db_id: str, schema_file: str) -> str:
+    """
+    Laedt das Schema fuer eine Datenbank aus der BIRD train_tables.sql Datei
+    """
+    with open(schema_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    # Finde die richtige Datenbank
+    db_schema_data = None
+    for item in data:
+        if item.get('db_id') == db_id:
+            db_schema_data = item
+            break
+    
+    # Baue lesbares Schema
+    schema_parts = []
+    
+    # Tabellen
+    for idx, table_name in enumerate(db_schema_data['table_names']):
+        schema_parts.append(f"Table: {table_name}")
+        
+        # Spalten fuer diese Tabelle
+        columns = []
+        for col_idx, (table_idx, col_name) in enumerate(db_schema_data['column_names']):
+            if table_idx == idx:
+                col_type = db_schema_data['column_types'][col_idx]
+                columns.append(f"{col_name} ({col_type})")
+        
+        schema_parts.append(f"Columns: {', '.join(columns)}")
+        schema_parts.append("")
+    
+    # Fremdschluessel
+    if db_schema_data.get('foreign_keys'):
+        schema_parts.append("Relationships:")
+        for fk in db_schema_data['foreign_keys']:
+            col_name = db_schema_data['column_names'][fk[0]][1]
+            ref_col_name = db_schema_data['column_names'][fk[1]][1]
+            
+            col_table_idx = db_schema_data['column_names'][fk[0]][0]
+            ref_table_idx = db_schema_data['column_names'][fk[1]][0]
+            
+            col_table = db_schema_data['table_names'][col_table_idx] if col_table_idx >= 0 else "unknown"
+            ref_table = db_schema_data['table_names'][ref_table_idx] if ref_table_idx >= 0 else "unknown"
+            
+            schema_parts.append(f"- {col_table}.{col_name} references {ref_table}.{ref_col_name}")
+    
+    return '\n'.join(schema_parts)
+
+# ============================================================
+# FRAGEN AUS TRAIN.JSON LADEN
+# ============================================================
+
+def load_questions_from_bird(db_id: str, questions_file: str, max_questions: int = 20) -> List[Dict]:
+    """
+    Laedt die Fragen fuer eine Datenbank aus der BIRD train.json Datei
+    Behaelt die originale Reihenfolge bei
+    """
+    with open(questions_file, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    # Filtere Fragen fuer die gewuenschte Datenbank
+    db_questions = [item for item in data if item.get('db_id') == db_id]
+    
+    # Begrenze auf max_questions
+    limited_questions = db_questions[:max_questions]
+    
+    print(f"Gefunden: {len(db_questions)} Fragen fuer {db_id}")
+    print(f"Verwende: {len(limited_questions)} Fragen (max. {max_questions})")
+    
+    return limited_questions
 
 # ============================================================
 # MODELL MANAGER MIT CHAIN-OF-THOUGHT PROMPT
@@ -39,29 +112,10 @@ MAX_LENGTH = 2048
 class CoTLLMManager:
     """Manager mit Chain-of-Thought Prompting fuer Text2SQL"""
     
-    # Database Schema fuer address Datenbank
-    DB_SCHEMA = """
-Table: zip_data
-Columns: zip_code, households, male_population, female_population, avg_house_value
-
-Table: country  
-Columns: zip_code, county, city
-
-Table: congress
-Columns: cognress_rep_id, party, state, district
-
-Table: zip_congress
-Columns: zip_code, district
-
-Relationships:
-- country.zip_code references zip_data.zip_code
-- zip_congress.zip_code references zip_data.zip_code
-- congress.district relates to zip_congress.district
-"""
-    
-    def __init__(self, model_path: str = "./trained_model", temperature: float = 0.8):
+    def __init__(self, model_path: str, db_schema: str, temperature: float = 0.8):
         print(f"\nLade Modell von: {model_path}")
         
+        self.db_schema = db_schema
         self.temperature = temperature
         self.device = "cpu"
         
@@ -79,7 +133,8 @@ Relationships:
         self.model.eval()
         self.model = self.model.to(self.device)
         
-        print(f"Modell geladen. Groesse: {sum(p.numel() for p in self.model.parameters()) / 1e9:.2f}B Parameter")
+        num_params = sum(p.numel() for p in self.model.parameters())
+        print(f"Modell geladen. Groesse: {num_params / 1e9:.2f}B Parameter")
     
     def generate_sql_variant(self, question: str, variant_num: int) -> Dict[str, str]:
         """
@@ -129,7 +184,7 @@ Lastly, we refine the constructed query in the optimization step, eliminating an
 
 User: Below I will provide a DB schema and a question that can be answered by querying the provided DB. You will then write out your thought process in detail followed by a single SQL query enclosed in ```sql ... ``` that answers the question.
 
-Database Info: Database Schema: {self.DB_SCHEMA}
+Database Info: Database Schema: {self.db_schema}
 
 Question: {question}
 
@@ -157,7 +212,6 @@ Analysis: Let me break down this question into smaller sub-problems.
     
     def _extract_evidence(self, response: str) -> str:
         """Extrahiert die Chain-of-Thought Erklaerung"""
-        # Nimm den gesamten Text vor dem SQL
         import re
         sql_match = re.search(r'```sql', response)
         if sql_match:
@@ -166,18 +220,18 @@ Analysis: Let me break down this question into smaller sub-problems.
         # Fallback: erste 500 Zeichen
         return response[:500].strip()
     
-    def batch_generate(self, questions: List[Dict], candidates_per_question: int = 10) -> List[Dict]:
+    def batch_generate(self, questions: List[Dict]) -> List[Dict]:
         """Generiert fuer alle Fragen Kandidaten"""
         all_candidates = []
         
         for idx, q in enumerate(questions, 1):
             question_text = q.get('question', '')
-            query_id = q.get('query_id', idx)
+            query_id = idx  # Verwende Index als query_id fuer die Reihenfolge
             
             print(f"\n[{idx}/{len(questions)}] Frage {query_id}: {question_text[:80]}...")
             
-            for v in range(candidates_per_question):
-                print(f"  Generiere Kandidat {v+1}/{candidates_per_question}...", end=" ", flush=True)
+            for v in range(CANDIDATES_PER_QUESTION):
+                print(f"  Generiere Kandidat {v+1}/{CANDIDATES_PER_QUESTION}...", end=" ", flush=True)
                 start = time.time()
                 
                 variant = self.generate_sql_variant(question_text, v)
@@ -187,7 +241,7 @@ Analysis: Let me break down this question into smaller sub-problems.
                 
                 candidate = {
                     "candidate_id": f"{query_id}.{v+1:02d}",
-                    "db_id": "address",
+                    "db_id": q.get('db_id'),  # Originale db_id aus der Frage
                     "question": question_text,
                     "query_id": query_id,
                     "evidence": variant.get("evidence", ""),
@@ -202,61 +256,68 @@ Analysis: Let me break down this question into smaller sub-problems.
         return all_candidates
 
 # ============================================================
-# DATEN LADEN
-# ============================================================
-
-def load_questions(num_questions: int = 20) -> List[Dict]:
-    """Laedt die Fragen aus der JSON-Datei"""
-    json_files = glob.glob(os.path.join(QUESTIONS_DIR, "*.json"))
-    json_files = [f for f in json_files if "address_from_OG_with_ids.json" not in f]
-    
-    if not json_files:
-        raise FileNotFoundError(f"Keine JSON-Dateien in {QUESTIONS_DIR} gefunden")
-    
-    questions_file = json_files[0]
-    print(f"Lade Fragen von: {os.path.basename(questions_file)}")
-    
-    with open(questions_file, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    
-    if isinstance(data, list):
-        return data[:num_questions]
-    else:
-        return [data]
-
-# ============================================================
 # MAIN
 # ============================================================
 
 def main():
     start_time = time.time()
     
+    # Datenbank-ID aus Kommandozeilen-Argument holen
+    if len(sys.argv) < 2:
+        print("Usage: python3 generate_candidates.py <db_name>")
+        print("Example: python3 generate_candidates.py citeseer")
+        print("Available databases: address, citeseer, <and others from BIRD>")
+        sys.exit(1)
+    
+    db_id = sys.argv[1]
+    
     print("=" * 70)
-    print("PIPELINE: Text2SQL mit Chain-of-Thought Prompting")
+    print(f"PIPELINE: Text2SQL mit Chain-of-Thought Prompting")
+    print(f"Datenbank: {db_id}")
     print("=" * 70)
     
-    # Fragen laden
-    print(f"\nLade {NUM_QUESTIONS} Fragen...")
-    questions = load_questions(NUM_QUESTIONS)
-    print(f"{len(questions)} Fragen geladen")
+    # Pfade setzen
+    SCHEMA_FILE = os.path.join(BASE_DIR, "data/BIRD/train/train/train_tables.sql")
+    QUESTIONS_FILE = os.path.join(BASE_DIR, "data/BIRD/train/train/train.json")
+    OUTPUT_FILE = os.path.join(BASE_DIR, f"{db_id}_candidates_cot.json")
     
-    # Modell initialisieren
+    # 1. Schema laden
+    print(f"\nLade Schema fuer {db_id}...")
+    db_schema = load_schema_from_bird(db_id, SCHEMA_FILE)
+    print("Schema geladen")
+    
+    # 2. Fragen laden
+    print(f"\nLade Fragen fuer {db_id}...")
+    questions = load_questions_from_bird(db_id, QUESTIONS_FILE, MAX_QUESTIONS)
+    
+    if not questions:
+        print(f"Keine Fragen fuer {db_id} gefunden.")
+        sys.exit(1)
+    
+    print(f"{len(questions)} Fragen geladen (Reihenfolge bleibt erhalten)")
+    
+    # 3. Modell initialisieren
     print(f"\nInitialisiere Modell...")
-    llm = CoTLLMManager(model_path=MODEL_PATH, temperature=TEMPERATURE)
+    llm = CoTLLMManager(
+        model_path=MODEL_PATH,
+        db_schema=db_schema,
+        temperature=TEMPERATURE
+    )
     
-    # Kandidaten generieren
-    total = len(questions) * CANDIDATES_PER_QUESTION
-    print(f"\nGeneriere {total} Kandidaten ({len(questions)} Fragen x {CANDIDATES_PER_QUESTION})")
+    # 4. Kandidaten generieren
+    total_candidates = len(questions) * CANDIDATES_PER_QUESTION
+    print(f"\nGeneriere {total_candidates} Kandidaten ({len(questions)} Fragen x {CANDIDATES_PER_QUESTION})")
     print("WARNUNG: CPU Betrieb - dies wird ca. 30-60 Minuten dauern")
     
-    all_candidates = llm.batch_generate(questions, CANDIDATES_PER_QUESTION)
+    all_candidates = llm.batch_generate(questions)
     
-    # Ergebnisse speichern
+    # 5. Ergebnisse speichern
     print(f"\nSpeichere {len(all_candidates)} Kandidaten...")
     Path(OUTPUT_FILE).parent.mkdir(parents=True, exist_ok=True)
     
     output_data = {
         "metadata": {
+            "db_id": db_id,
             "num_questions": len(questions),
             "candidates_per_question": CANDIDATES_PER_QUESTION,
             "total_candidates": len(all_candidates),
@@ -270,21 +331,26 @@ def main():
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         json.dump(output_data, f, ensure_ascii=False, indent=2)
 
-    end_time = time.time()
+    end_time = time.time()    #Endzeit
     required_time = end_time - start_time
     
     print("\n" + "=" * 70)
     print("PIPELINE ABGESCHLOSSEN")
     print("=" * 70)
-    print(f"\nAusgabedatei: {OUTPUT_FILE}")
+    print(f"\nDatenbank: {db_id}")
+    print(f"Verarbeitete Fragen: {len(questions)}")
     print(f"Generierte Kandidaten: {len(all_candidates)}")
+    print(f"\nAusgabedatei: {OUTPUT_FILE}")
     print("\nFormat: Jeder Kandidat enthaelt:")
     print("  - candidate_id: Frage.Kandidat (z.B. 1.01)")
+    print("  - db_id: Originaler Datenbank-Name")
+    print("  - query_id: Index der Frage (Reihenfolge)")
     print("  - evidence: Chain-of-Thought Erklaerung")
     print("  - SQL: Die generierte SQL Query")
+
     
     print("\n" + "="*50)
-    print("Gesamtzeit für Kandidatengenerierung")
+    print("Benötigte Zeit für Kandidatengenerierung")
     print("="*50)
     print(f"Total execution time: {required_time:.2f} seconds")
     print(f"Total execution time: {required_time/60:.2f} minutes")

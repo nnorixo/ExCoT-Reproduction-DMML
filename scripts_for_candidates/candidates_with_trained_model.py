@@ -23,7 +23,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 # KONFIGURATION
 # ============================================================
 
-BASE_DIR = "/home/akuzg/dmml/axolotl/second_round"
+BASE_DIR = "/home/akuzg/dmml/axolotl"
 MODEL_PATH = "./trained_model"
 TEMPERATURE = 0.8
 MAX_LENGTH = 2048
@@ -277,8 +277,8 @@ def main():
     print("=" * 70)
     
     # Pfade setzen
-    SCHEMA_FILE = os.path.join(BASE_DIR, "../data/BIRD/train/train/train_tables.sql")
-    QUESTIONS_FILE = os.path.join(BASE_DIR, "../data/BIRD/train/train/train.json")
+    SCHEMA_FILE = os.path.join(BASE_DIR, "data/BIRD/train/train/train_tables.json")
+    QUESTIONS_FILE = os.path.join(BASE_DIR, "data/BIRD/train/train/train.json")
     OUTPUT_FILE = os.path.join(BASE_DIR, f"{db_id}_candidates_cot.json")
     
     # 1. Schema laden
